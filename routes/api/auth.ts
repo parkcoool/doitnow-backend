@@ -1,6 +1,6 @@
 import express from "express";
 
-import StatusCode from "../code";
+import StatusCode from "../../code";
 
 import type { AuthProvider } from "auth";
 import type { APIResponse } from "api";
