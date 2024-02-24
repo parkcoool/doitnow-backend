@@ -2,10 +2,9 @@
   "name": "doitnow-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/app.ts"
+    "dev": "nodemon ./app.ts"
   },
   "author": "",
   "license": "ISC",
