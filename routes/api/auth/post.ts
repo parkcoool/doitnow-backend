@@ -1,18 +1,18 @@
-import express from "express";
+import router from "./";
 
-import StatusCode from "../../code";
+import StatusCode from "../../../code";
 
 import type { AuthProvider } from "auth";
 import type { APIResponse } from "api";
 
-interface PostBody {
+interface ReqeustBody {
   authProvider: AuthProvider;
   code?: string;
   identifier?: string;
   password?: string;
 }
 
-interface PostResponse {
+interface ResponseBody {
   accessToken: {
     token: string;
     expiresAt: string;
@@ -23,13 +23,7 @@ interface PostResponse {
   };
 }
 
-const router = express.Router();
-
-router.use((req, res, next) => {
-  next();
-});
-
-router.post<"/", {}, APIResponse<PostResponse | undefined>, PostBody>("/", (req, res) => {
+router.post<"/", {}, APIResponse<ResponseBody | undefined>, ReqeustBody>("/", (req, res) => {
   // ...
 
   res.status(200).send({
@@ -47,5 +41,3 @@ router.post<"/", {}, APIResponse<PostResponse | undefined>, PostBody>("/", (req,
     },
   });
 });
-
-export default router;
