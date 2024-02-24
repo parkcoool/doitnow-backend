@@ -1,12 +1,26 @@
 import express from "express";
 
-import type { AuthProvider } from "auth";
+import StatusCode from "../code";
 
-interface GetTokenBody {
+import type { AuthProvider } from "auth";
+import type { APIResponse } from "api";
+
+interface PostBody {
   authProvider: AuthProvider;
   code?: string;
   identifier?: string;
   password?: string;
+}
+
+interface PostResponse {
+  accessToken: {
+    token: string;
+    expiresAt: string;
+  };
+  refreshToken: {
+    token: string;
+    expiresAt: string;
+  };
 }
 
 const router = express.Router();
@@ -15,9 +29,22 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get("/", (req, res) => {
+router.post<"/", {}, APIResponse<PostResponse | undefined>, PostBody>("/", (req, res) => {
+  // ...
+
   res.status(200).send({
-    message: "Hello, world!",
+    code: StatusCode.SUCCESS,
+    message: "성공적으로 로그인되었습니다.",
+    result: {
+      accessToken: {
+        token: "",
+        expiresAt: "",
+      },
+      refreshToken: {
+        token: "",
+        expiresAt: "",
+      },
+    },
   });
 });
 
