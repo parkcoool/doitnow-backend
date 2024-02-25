@@ -1,4 +1,4 @@
-import router from "./";
+import authRouter from "./";
 
 import StatusCode from "../../../code";
 
@@ -13,30 +13,34 @@ interface ReqeustBody {
 }
 
 interface ResponseBody {
-  accessToken: {
-    token: string;
-    expiresAt: string;
-  };
-  refreshToken: {
-    token: string;
-    expiresAt: string;
-  };
+  token: {
+    accessToken: {
+      token: string;
+      expiresAt: string;
+    };
+    refreshToken: {
+      token: string;
+      expiresAt: string;
+    };
+  } | null;
 }
 
-router.post<"/", {}, APIResponse<ResponseBody | undefined>, ReqeustBody>("/", (req, res) => {
+authRouter.post<"/", {}, APIResponse<ResponseBody>, ReqeustBody>("/", (req, res, next) => {
   // ...
 
   res.status(200).send({
     code: StatusCode.SUCCESS,
     message: "성공적으로 로그인되었습니다.",
     result: {
-      accessToken: {
-        token: "",
-        expiresAt: "",
-      },
-      refreshToken: {
-        token: "",
-        expiresAt: "",
+      token: {
+        accessToken: {
+          token: "",
+          expiresAt: "",
+        },
+        refreshToken: {
+          token: "",
+          expiresAt: "",
+        },
       },
     },
   });

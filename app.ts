@@ -20,6 +20,5 @@ app.use(
 app.use("/api", apiRouter);
 
 app.listen(port, () => {
-  console.log(process.env.CLIENT_URL);
   console.log(`App is listening on port ${port}`);
 });

@@ -1,9 +1,21 @@
 import express from "express";
 
+import StatusCode from "../../code";
+
 import authRouter from "./auth";
+import userRouter from "./user";
 
-const router = express.Router();
+const apiRouter = express.Router();
 
-router.use("/auth", authRouter);
+apiRouter.use("/auth", authRouter);
+apiRouter.use("/user", userRouter);
 
-export default router;
+apiRouter.use((req, res) => {
+  res.status(404).send({
+    code: StatusCode.NOT_FOUND,
+    message: "존재하지 않는 API에 대한 요청입니다.",
+    result: null,
+  });
+});
+
+export default apiRouter;
