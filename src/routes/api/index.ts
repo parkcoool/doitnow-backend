@@ -1,6 +1,6 @@
 import express from "express";
 
-import StatusCode from "../../code";
+import StatusCode from "constant/statusCode";
 
 import authRouter from "./auth";
 import userRouter from "./user";

@@ -1,0 +1,6 @@
+{
+  "ignore": ["./node_modules"],
+  "watch": ["./src"],
+  "exec": "ts-node -r tsconfig-paths/register ./app.ts",
+  "ext": "ts"
+}

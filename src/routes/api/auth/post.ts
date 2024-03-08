@@ -1,6 +1,6 @@
 import authRouter from "./";
 
-import StatusCode from "../../../code";
+import StatusCode from "constant/statusCode";
 
 import type { AuthProvider } from "auth";
 import type { APIResponse } from "api";
