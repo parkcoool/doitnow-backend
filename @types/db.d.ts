@@ -11,5 +11,8 @@ declare module "db" {
     createdAt: string;
   }
 
-  interface PublicUserRow extends User, RowDataPacket {}
+  interface PublicUserRow extends RowDataPacket {
+    id: number;
+    name: string;
+  }
 }

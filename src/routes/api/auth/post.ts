@@ -1,5 +1,7 @@
 import authRouter from "./";
 
+import jwt from "jsonwebtoken";
+
 import StatusCode from "constant/statusCode";
 import getUsers from "model/user/getUsers";
 
@@ -18,11 +20,11 @@ interface ResponseBody {
   token: {
     accessToken: {
       token: string;
-      expiresAt: string;
+      expiresIn: string;
     };
     refreshToken: {
       token: string;
-      expiresAt: string;
+      expiresIn: string;
     };
   } | null;
 }
@@ -53,12 +55,12 @@ authRouter.post<"/", {}, APIResponse<ResponseBody>, ReqeustBody>("/", async (req
     result: {
       token: {
         accessToken: {
-          token: "",
-          expiresAt: "",
+          token: jwt.sign({ id: users[0].id }, process.env.JWT_SECRET!, { expiresIn: "1h" }),
+          expiresIn: "1h",
         },
         refreshToken: {
-          token: "",
-          expiresAt: "",
+          token: jwt.sign({ id: users[0].id }, process.env.JWT_SECRET!, { expiresIn: "14d" }),
+          expiresIn: "14d",
         },
       },
     },
