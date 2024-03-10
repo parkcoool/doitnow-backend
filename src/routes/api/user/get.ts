@@ -34,7 +34,7 @@ userRouter.get<"/", {}, APIResponse<ResponseBody>, {}, RequestQuery>("/", async 
       },
     });
   }
-  
+
   res.status(200).send({
     code: StatusCode.SUCCESS,
     message: "성공적으로 사용자 정보를 가져왔습니다.",

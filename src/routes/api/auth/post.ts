@@ -34,15 +34,15 @@ authRouter.post<"/", {}, APIResponse<ResponseBody>, ReqeustBody>("/", async (req
   let users: PublicUserRow[];
 
   if (isIdentifierEmail) {
-    users = await getUsers({ email: req.query.identifier } as Partial<UserRow>);
+    users = await getUsers({ email: req.body.identifier, password: req.body.password } as Partial<UserRow>);
   } else {
-    users = await getUsers({ name: req.query.identifier } as Partial<UserRow>);
+    users = await getUsers({ name: req.body.identifier, password: req.body.password } as Partial<UserRow>);
   }
 
   if (users.length === 0) {
     return res.status(200).send({
       code: StatusCode.NOT_FOUND,
-      message: "해당 사용자를 찾을 수 없습니다.",
+      message: "존재하지 않는 사용자입니다.",
       result: {
         token: null,
       },

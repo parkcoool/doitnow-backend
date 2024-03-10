@@ -8,3 +8,4 @@ const userRouter = express.Router();
 export default userRouter;
 
 import "./get";
+import "./post";
