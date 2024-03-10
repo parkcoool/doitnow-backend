@@ -16,7 +16,7 @@ interface ResponseBody {
 }
 
 userRouter.get<"/", {}, APIResponse<ResponseBody>, {}, RequestQuery>("/", async (req, res, next) => {
-  const isIdentifierEmail = req.query.identifier.includes("@");
+  const isIdentifierEmail = /\S+@\S+\.\S+/.test(req.query.identifier);
   let users: PublicUserRow[];
 
   if (isIdentifierEmail) {
