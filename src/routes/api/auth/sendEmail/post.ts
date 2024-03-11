@@ -4,7 +4,6 @@ import StatusCode from "constant/statusCode";
 import addEmailVerifyCode from "model/emailVerify/addEmailVerifyCode";
 
 import type { APIResponse } from "api";
-import type { QueryError } from "mysql2";
 
 interface ReqeustBody {
   email: string;
