@@ -23,7 +23,15 @@ userRouter.post<"/", {}, APIResponse<null>, ReqeustBody>("/", async (req, res, n
     });
   }
 
-  if (/\W/.test(req.body.name) === true) {
+  if (/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,20}$/.test(req.body.password) === false) {
+    return res.status(200).send({
+      code: StatusCode.INVALID_PASSWORD,
+      message: "비밀번호가 올바르지 않습니다.",
+      result: null,
+    });
+  }
+
+  if (/\W/.test(req.body.name) === true || req.body.name.length < 3 || req.body.name.length > 20) {
     return res.status(200).send({
       code: StatusCode.INVALID_NAME,
       message: "사용자명이 올바르지 않습니다.",

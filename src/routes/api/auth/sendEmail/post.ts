@@ -24,6 +24,7 @@ sendEmailRouter.post<"/", {}, APIResponse<ResponseBody | null>, ReqeustBody>("/"
 
   const expiresAt = new Date();
   expiresAt.setMinutes(expiresAt.getMinutes() + 5);
+  // expiresAt.setSeconds(expiresAt.getSeconds() + 5);
 
   // 이메일 주소를 확인하여 인증 코드를 발송하는 로직
   // ...

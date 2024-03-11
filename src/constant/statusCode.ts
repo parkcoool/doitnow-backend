@@ -8,6 +8,7 @@ enum StatusCode {
   INVALID_EMAIL = 2000,
   DUPLICATED_VALUES = 2001,
   INVALID_NAME = 2002,
+  INVALID_PASSWORD = 2003,
 }
 
 export default StatusCode;
