@@ -20,11 +20,11 @@ interface ResponseBody {
   token: {
     accessToken: {
       token: string;
-      expiresIn: string;
+      expiresIn: number;
     };
     refreshToken: {
       token: string;
-      expiresIn: string;
+      expiresIn: number;
     };
   } | null;
 }
@@ -56,11 +56,11 @@ authRouter.post<"/", {}, APIResponse<ResponseBody>, ReqeustBody>("/", async (req
       token: {
         accessToken: {
           token: jwt.sign({ id: users[0].id }, process.env.JWT_SECRET!, { expiresIn: "1h" }),
-          expiresIn: "1h",
+          expiresIn: 1 / 24,
         },
         refreshToken: {
           token: jwt.sign({ id: users[0].id }, process.env.JWT_SECRET!, { expiresIn: "14d" }),
-          expiresIn: "14d",
+          expiresIn: 14,
         },
       },
     },
