@@ -1,13 +1,19 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import https from "https";
+import fs from "fs";
 
 import apiRouter from "./src/routes/api";
 
 dotenv.config();
 
+const options = {
+  key: fs.readFileSync("./src/config/key.pem"),
+  cert: fs.readFileSync("./src/config/cert.pem"),
+};
+
 const app = express();
-const port = 80;
 
 app.use(express.json());
 app.use(
@@ -19,6 +25,6 @@ app.use(
 
 app.use("/api", apiRouter);
 
-app.listen(port, () => {
-  console.log(`App is listening on port ${port}`);
+https.createServer(options, app).listen(443, () => {
+  console.log("App is listening on port 443");
 });
