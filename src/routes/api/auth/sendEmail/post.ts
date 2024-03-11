@@ -24,7 +24,8 @@ sendEmailRouter.post<"/", {}, APIResponse<ResponseBody | null>, ReqeustBody>("/"
   }
 
   // 인증 코드 생성
-  const code = Math.random().toString(36).substring(2, 6);
+  const code = (Math.floor(Math.random() * 10000) + 10000).toString().substring(1);
+  console.log(code);
 
   // 이메일 주소 정제
   const email = req.body.email.trim();

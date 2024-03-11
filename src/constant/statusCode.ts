@@ -9,6 +9,9 @@ enum StatusCode {
   DUPLICATED_VALUES = 2001,
   INVALID_NAME = 2002,
   INVALID_PASSWORD = 2003,
+
+  // 3000-3999: Auth
+  VERIFY_CODE_NOT_MATCHED = 3000,
 }
 
 export default StatusCode;

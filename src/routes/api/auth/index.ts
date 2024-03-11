@@ -1,6 +1,7 @@
 import express from "express";
 
 import sendEmailRouter from "./sendEmail";
+import verifyEmail from "./verifyEmail";
 
 /**
  * @path `/api/auth`
@@ -9,6 +10,7 @@ import sendEmailRouter from "./sendEmail";
 const authRouter = express.Router();
 
 authRouter.use("/sendEmail", sendEmailRouter);
+authRouter.use("/verifyEmail", verifyEmail);
 
 export default authRouter;
 
