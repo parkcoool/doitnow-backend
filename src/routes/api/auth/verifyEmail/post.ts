@@ -6,6 +6,7 @@ import StatusCode from "constant/statusCode";
 import deleteEmailVerifyCode from "model/emailVerify/deleteEmailVerifyCode";
 
 import type { APIResponse } from "api";
+import type { Token } from "auth";
 
 interface ReqeustBody {
   email: string;
@@ -13,7 +14,7 @@ interface ReqeustBody {
 }
 
 interface ResponseBody {
-  token: string | null;
+  token: Token | null;
 }
 
 verifyEmailRouter.post<"/", {}, APIResponse<ResponseBody>, ReqeustBody>("/", async (req, res, next) => {
@@ -44,7 +45,7 @@ verifyEmailRouter.post<"/", {}, APIResponse<ResponseBody>, ReqeustBody>("/", asy
     code: StatusCode.SUCCESS,
     message: "이메일 인증에 성공했습니다.",
     result: {
-      token: jwt.sign({ email: email }, process.env.JWT_SECRET!),
+      token: { token: jwt.sign({ email: email }, process.env.JWT_SECRET!, { expiresIn: "1h" }), expiresIn: 1 / 24 },
     },
   });
 });
