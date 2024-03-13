@@ -8,6 +8,7 @@ import createUser from "model/user/createUser";
 
 import type { APIResponse } from "api";
 import type { QueryError } from "mysql2";
+import { randomBytes } from "crypto";
 
 interface ReqeustBody {
   email: string;
@@ -52,7 +53,14 @@ userRouter.post<"/", {}, APIResponse<undefined>, ReqeustBody>("/", async (req, r
   }
 
   try {
-    await createUser(req.body.email, req.body.password, req.body.name);
+    await createUser(
+      {
+        email: req.body.email,
+        password: req.body.password,
+        name: req.body.name,
+      },
+      randomBytes(32).toString("base64")
+    );
 
     res.status(200).send({
       code: StatusCode.SUCCESS,

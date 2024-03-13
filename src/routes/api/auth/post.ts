@@ -7,7 +7,6 @@ import getUsers from "model/user/getUsers";
 
 import type { APIResponse } from "api";
 import type { AuthProvider } from "auth";
-import type { PublicUserRow, UserRow } from "db";
 
 interface ReqeustBody {
   authProvider: AuthProvider;
@@ -31,13 +30,12 @@ interface ResponseBody {
 
 authRouter.post<"/", {}, APIResponse<ResponseBody>, ReqeustBody>("/", async (req, res, next) => {
   const isIdentifierEmail = req.body.identifier?.includes("@");
-  let users: PublicUserRow[];
+  const userFilter = {
+    [isIdentifierEmail ? "email" : "name"]: req.body.identifier,
+    password: req.body.password,
+  };
 
-  if (isIdentifierEmail) {
-    users = await getUsers({ email: req.body.identifier, password: req.body.password } as Partial<UserRow>);
-  } else {
-    users = await getUsers({ name: req.body.identifier, password: req.body.password } as Partial<UserRow>);
-  }
+  const users = (await getUsers(userFilter))[0];
 
   if (users.length === 0) {
     return res.status(200).send({

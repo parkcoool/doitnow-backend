@@ -9,3 +9,4 @@ export default userRouter;
 
 import "./get";
 import "./post";
+import "./patch";

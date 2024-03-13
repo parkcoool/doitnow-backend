@@ -4,25 +4,30 @@ import StatusCode from "constant/statusCode";
 import getUsers from "model/user/getUsers";
 
 import type { APIResponse } from "api";
-import type { PublicUserRow, UserRow } from "db";
 
 interface RequestQuery {
   identifier: string;
 }
 
 interface ResponseBody {
-  user: PublicUserRow | null;
+  user: {
+    id: number;
+    email: string;
+    name: string;
+  } | null;
 }
 
 userRouter.get<"/", {}, APIResponse<ResponseBody>, {}, RequestQuery>("/", async (req, res, next) => {
   const isIdentifierEmail = /\S+@\S+\.\S+/.test(req.query.identifier);
-  let users: PublicUserRow[];
+  const userFilter = {
+    [isIdentifierEmail ? "email" : "name"]: req.query.identifier,
+  };
 
-  if (isIdentifierEmail) {
-    users = await getUsers({ email: req.query.identifier } as Partial<UserRow>);
-  } else {
-    users = await getUsers({ name: req.query.identifier } as Partial<UserRow>);
-  }
+  const users = (await getUsers(userFilter))[0].map((user) => ({
+    id: user.id,
+    email: user.email,
+    name: user.name,
+  }));
 
   if (users.length === 0) {
     return res.status(200).send({
