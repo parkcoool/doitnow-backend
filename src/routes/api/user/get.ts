@@ -4,7 +4,6 @@ import StatusCode from "constant/statusCode";
 import getUsers from "model/user/getUsers";
 
 import type { APIResponse } from "api";
-import type { User } from "user";
 import type { PublicUserRow, UserRow } from "db";
 
 interface RequestQuery {
@@ -12,7 +11,7 @@ interface RequestQuery {
 }
 
 interface ResponseBody {
-  user: User | null;
+  user: PublicUserRow | null;
 }
 
 userRouter.get<"/", {}, APIResponse<ResponseBody>, {}, RequestQuery>("/", async (req, res, next) => {

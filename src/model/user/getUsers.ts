@@ -18,7 +18,7 @@ interface UserFilter extends RowDataPacket {
 export default async function getUsers(filter: Partial<UserFilter>) {
   const { password, ...filterWithoutPassword } = filter;
 
-  const queryResult = await db.query<UserRow[]>("SELECT id, name, password, salt FROM user WHERE ?", [
+  const queryResult = await db.query<UserRow[]>("SELECT id, email, name, password, salt FROM user WHERE ?", [
     filterWithoutPassword,
   ]);
 
@@ -31,11 +31,12 @@ export default async function getUsers(filter: Partial<UserFilter>) {
     result = queryResult[0];
   }
 
-  // id와 name만 반환한다.
+  // id, email, name만 반환한다.
   return result.map(
     (user) =>
       ({
         id: user.id,
+        email: user.email,
         name: user.name,
       } as PublicUserRow)
   );

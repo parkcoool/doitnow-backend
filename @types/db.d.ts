@@ -13,6 +13,7 @@ declare module "db" {
 
   interface PublicUserRow extends RowDataPacket {
     id: number;
+    email: string;
     name: string;
   }
 }
