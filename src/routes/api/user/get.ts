@@ -4,9 +4,11 @@ import StatusCode from "constant/statusCode";
 import getUsers from "model/user/getUsers";
 
 import type { APIResponse } from "api";
+import type { UserFilter } from "model/user/getUsers";
 
 interface RequestQuery {
-  identifier: string;
+  identifier?: string;
+  id?: number;
 }
 
 interface ResponseBody {
@@ -14,19 +16,42 @@ interface ResponseBody {
     id: number;
     email: string;
     name: string;
+    bio: string | null;
+    createdAt: string;
+    profileImage: string | null;
   } | null;
 }
 
 userRouter.get<"/", {}, APIResponse<ResponseBody>, {}, RequestQuery>("/", async (req, res, next) => {
-  const isIdentifierEmail = /\S+@\S+\.\S+/.test(req.query.identifier);
-  const userFilter = {
-    [isIdentifierEmail ? "email" : "name"]: req.query.identifier,
-  };
+  const userFilter: Partial<UserFilter> = {};
+
+  // 쿼리 파라미터에 identifier가 주어진 경우
+  if (req.query.identifier) {
+    const isIdentifierEmail = /\S+@\S+\.\S+/.test(req.query.identifier);
+    if (isIdentifierEmail) userFilter.email = req.query.identifier;
+    else userFilter.name = req.query.identifier;
+  }
+
+  // 쿼리 파라미터에 id가 주어진 경우
+  else if (req.query.id) {
+    userFilter.id = req.query.id;
+  } else {
+    return res.status(400).send({
+      code: StatusCode.BAD_REQUEST,
+      message: "identifier 혹은 id가 주어지지 않았습니다.",
+      result: {
+        user: null,
+      },
+    });
+  }
 
   const users = (await getUsers(userFilter))[0].map((user) => ({
     id: user.id,
     email: user.email,
     name: user.name,
+    bio: user.bio,
+    createdAt: user.createdAt,
+    profileImage: user.profileImage,
   }));
 
   if (users.length === 0) {

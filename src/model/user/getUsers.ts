@@ -5,7 +5,7 @@ import getSaltedHash from "util/getSaltedHash";
 import type { UserRow } from "db";
 import type { RowDataPacket } from "mysql2";
 
-interface UserFilter {
+export interface UserFilter {
   id: number;
   email: string;
   name: string;
@@ -17,10 +17,7 @@ export default async function getUsers(filter: Partial<UserFilter>) {
 
   if (Object.keys(filterWithoutPassword).length > 1) throw new Error("Only one filter is allowed.");
 
-  const queryResult = await db.query<(UserRow & RowDataPacket)[]>(
-    "SELECT id, email, name, password, salt FROM user WHERE ?",
-    filterWithoutPassword
-  );
+  const queryResult = await db.query<(UserRow & RowDataPacket)[]>("SELECT * FROM user WHERE ?", filterWithoutPassword);
 
   // 비밀번호가 주어진 경우, 비밀번호가 일치하는 사용자만 반환한다.
   if (password !== undefined) {

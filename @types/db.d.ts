@@ -5,6 +5,8 @@ declare module "db" {
     salt: string;
     password: string;
     name: string;
+    bio: string | null;
     createdAt: string;
+    profileImage: string | null;
   }
 }

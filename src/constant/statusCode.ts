@@ -3,6 +3,7 @@ enum StatusCode {
   SUCCESS = 1000,
   NOT_FOUND = 1001,
   SERVER_ERROR = 1002,
+  BAD_REQUEST = 1003,
 
   // 2000-2999: User
   INVALID_EMAIL = 2000,
