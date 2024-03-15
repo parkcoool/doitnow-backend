@@ -13,6 +13,7 @@ enum StatusCode {
   // 3000-3999: Auth
   VERIFY_CODE_NOT_MATCHED = 3000,
   INVALID_EMAIL_TOKEN = 3001,
+  INVALID_REFRESH_TOKEN = 3002,
 }
 
 export default StatusCode;
