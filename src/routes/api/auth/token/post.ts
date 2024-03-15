@@ -17,13 +17,17 @@ interface ResponseBody {
     refreshToken: Token;
     accessToken: Token;
   } | null;
+  id?: number;
+  name?: string;
 }
 
 tokenRouter.post<"/", {}, APIResponse<ResponseBody>, ReqeustBody>("/", async (req, res, next) => {
   const { refreshToken } = req.body;
   const tokenPayload = jwt.verify(refreshToken, process.env.JWT_SECRET!) as JwtPayload;
 
-  if ((await getUsers({ id: tokenPayload.id }))[0].length === 0) {
+  const users = (await getUsers({ id: tokenPayload.id }))[0];
+
+  if (users.length !== 1) {
     return res.status(200).send({
       code: StatusCode.INVALID_REFRESH_TOKEN,
       message: "유효하지 않은 토큰입니다.",
@@ -47,6 +51,8 @@ tokenRouter.post<"/", {}, APIResponse<ResponseBody>, ReqeustBody>("/", async (re
           expiresIn: 1 / 24,
         },
       },
+      id: users[0].id,
+      name: users[0].name,
     },
   });
 });
