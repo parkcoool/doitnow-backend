@@ -2,11 +2,20 @@ declare module "db" {
   interface UserRow {
     id: number;
     email: string;
-    salt: string;
-    password: string;
+    username: string;
     name: string;
+    password: string;
+    salt: string;
     bio: string | null;
-    createdAt: string;
     profileImage: string | null;
+    createdAt: string;
+  }
+
+  interface EmailVerifyCodeRow {
+    email: string;
+    code: string;
+    ipAddress: string;
+    expiresAt: string;
+    createdAt: string;
   }
 }

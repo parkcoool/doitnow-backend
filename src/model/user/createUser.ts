@@ -1,24 +1,34 @@
 import db from "model";
 
-import getSaltedHash from "util/getSaltedHash";
-
 import type { ResultSetHeader } from "mysql2";
-import type { User } from "user";
 
-interface createUserProps {
+interface CreateUserProps {
   email: string;
   password: string;
+  salt: string;
+  username: string;
   name: string;
+  bio: string | null;
+  profileImage: string | null;
 }
 
-export default async function createUser({ email, password, name }: createUserProps, salt: string) {
-  const hashedPassword = getSaltedHash(password, salt);
-
+export default async function createUser({
+  email,
+  password,
+  salt,
+  username,
+  name,
+  bio = null,
+  profileImage = null,
+}: CreateUserProps) {
   const queryResult = await db.query<ResultSetHeader>("INSERT INTO user SET ?", {
     email,
-    password: hashedPassword,
+    password,
     salt,
+    username,
     name,
+    bio,
+    profileImage,
   });
 
   return queryResult;

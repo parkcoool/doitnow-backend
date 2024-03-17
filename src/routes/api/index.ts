@@ -1,21 +1,23 @@
 import express from "express";
 
-import StatusCode from "constant/statusCode";
-
 import authRouter from "./auth";
 import userRouter from "./user";
 
+import errorHandler from "middleware/error/errorHandler";
+import userErrorHandler from "middleware/error/userErrorHandler";
+import serverErrorHandler from "middleware/error/serverErrorHandler";
+import notFoundHandler from "middleware/common/notFoundHandler";
+
 const apiRouter = express.Router();
 
+// 라우터
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/user", userRouter);
 
-apiRouter.use((req, res) => {
-  res.status(404).send({
-    code: StatusCode.NOT_FOUND,
-    message: "존재하지 않는 API에 대한 요청입니다.",
-    result: null,
-  });
-});
+// 404 핸들 미들웨어
+apiRouter.use(notFoundHandler);
+
+// 에러 핸들 미들웨어
+apiRouter.use(userErrorHandler, serverErrorHandler, errorHandler);
 
 export default apiRouter;
