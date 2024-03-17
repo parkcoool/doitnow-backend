@@ -30,7 +30,7 @@ const getPublicProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async functi
   const { name, email, id } = req.query;
 
   if ([name, email, id].filter((v) => v !== undefined).length !== 1) {
-    return next(new InvalidValueError("사용자 이름, 이메일, id"));
+    return next(new InvalidValueError("사용자 이름, 이메일, 아이디"));
   }
 
   let queryResult: [(UserRow & RowDataPacket)[], FieldPacket[]];

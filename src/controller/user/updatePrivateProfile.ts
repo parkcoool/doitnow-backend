@@ -1,5 +1,6 @@
 import { QueryError } from "mysql2";
 import { ER_DUP_ENTRY } from "mysql-error-keys";
+import jwt from "jsonwebtoken";
 
 import patchUserByEmail from "model/user/patchUserByEmail";
 import getUserByEmail from "model/user/getUserByEmail";
@@ -13,11 +14,12 @@ import getSaltedHash from "util/common/getSaltedHash";
 import verifyEmail from "util/verify/verifyEmail";
 import verifyPassword from "util/verify/verifyPassword";
 
+import type { JwtPayload } from "jsonwebtoken";
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
 
 interface ReqBody {
-  email?: string;
+  emailToken?: string;
   password?: string;
 }
 
@@ -25,15 +27,14 @@ interface ResBody extends APIResponse {}
 
 const updatePrivateProfile: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, next) {
   const email = req.email;
-  if (email === undefined) {
-    return next(new ServerError("사용자의 이메일 주소를 불러올 수 없어요."));
-  }
+  if (email === undefined) return next(new ServerError("사용자의 이메일 주소를 불러올 수 없어요."));
 
-  const { email: newEmail, password } = req.body;
+  const { emailToken, password } = req.body;
+  let newEmail: string | undefined = emailToken && (jwt.decode(emailToken) as JwtPayload).email;
 
   // 값 검증
-  if (newEmail !== undefined && !verifyEmail(newEmail)) return next(new InvalidValueError("email"));
-  if (password !== undefined && !verifyPassword(password)) return next(new InvalidValueError("password"));
+  if (newEmail !== undefined && !verifyEmail(newEmail)) return next(new InvalidValueError("이메일"));
+  if (password !== undefined && !verifyPassword(password)) return next(new InvalidValueError("비밀번호"));
 
   // 비밀번호가 변경되는 경우 새로운 비밀번호를 해싱한다.
   let hashedPassword: string | undefined;

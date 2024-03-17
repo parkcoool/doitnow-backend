@@ -34,9 +34,9 @@ const updatePublicProfile: RequestHandler<{}, ResBody, ReqBody> = async function
   const { username, name, bio, profileImage } = req.body;
 
   // 값 검증
-  if (username !== undefined && !verifyUsername(username)) return next(new InvalidValueError("username"));
-  if (name !== undefined && !verifyName(name)) return next(new InvalidValueError("name"));
-  if (bio !== undefined && bio !== null && !verifyBio(bio)) return next(new InvalidValueError("bio"));
+  if (username !== undefined && !verifyUsername(username)) return next(new InvalidValueError("사용자 이름"));
+  if (name !== undefined && !verifyName(name)) return next(new InvalidValueError("이름"));
+  if (bio !== undefined && bio !== null && !verifyBio(bio)) return next(new InvalidValueError("소개"));
   if (profileImage !== undefined && profileImage !== null && !verifyImageUrl(profileImage))
     return next(new InvalidValueError("프로필 사진"));
 
