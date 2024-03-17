@@ -5,12 +5,13 @@ import ServerError from "error/ServerError";
 import getSaltedHash from "util/common/getSaltedHash";
 
 import type { RequestHandler } from "express";
+import type { APIResponse } from "api";
 
 interface ReqBody {
   email: string;
 }
 
-interface ResBody {}
+interface ResBody extends APIResponse {}
 
 const sendEmail: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, next) {
   const email = req.body.email.trim();
@@ -34,6 +35,10 @@ const sendEmail: RequestHandler<{}, ResBody, ReqBody> = async function (req, res
   } catch (e) {
     return next(new ServerError("이메일을 발송하는 중에 문제가 발생했어요."));
   }
+
+  res.status(200).json({
+    message: "인증 코드가 발송됐어요.",
+  });
 };
 
 export default sendEmail;

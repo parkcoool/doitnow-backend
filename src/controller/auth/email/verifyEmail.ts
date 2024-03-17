@@ -5,13 +5,14 @@ import ServerError from "error/ServerError";
 import getSaltedHash from "util/common/getSaltedHash";
 
 import type { RequestHandler } from "express";
+import type { APIResponse } from "api";
 
 interface ReqBody {
   email: string;
   code: string;
 }
 
-interface ResBody {
+interface ResBody extends APIResponse {
   token: {
     token: string;
     expiresIn: number;
@@ -39,6 +40,7 @@ const verifyEmail: RequestHandler<{}, ResBody, ReqBody> = async function (req, r
       token,
       expiresIn: 1 / 24,
     },
+    message: "이메일이 인증됐어요.",
   });
 };
 

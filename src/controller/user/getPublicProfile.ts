@@ -7,8 +7,8 @@ import InvalidValueError from "error/user/InvalidValueError";
 
 import type { UserRow } from "db";
 import type { RowDataPacket, FieldPacket } from "mysql2";
-
 import type { RequestHandler } from "express";
+import type { APIResponse } from "api";
 
 interface ReqQuery {
   username?: string;
@@ -16,7 +16,7 @@ interface ReqQuery {
   id?: number;
 }
 
-interface ResBody {
+interface ResBody extends APIResponse {
   id: number;
   username: string;
   name: string;
@@ -56,6 +56,7 @@ const getPublicProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async functi
     bio: user.bio,
     createdAt: user.createdAt,
     profileImage: user.profileImage,
+    message: "사용자 정보를 불러왔어요.",
   });
 };
 

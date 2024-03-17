@@ -6,12 +6,13 @@ import ServerError from "error/ServerError";
 import InvalidValueError from "error/user/InvalidValueError";
 
 import type { RequestHandler } from "express";
+import type { APIResponse } from "api";
 
 interface ReqBody {
   refreshToken: string;
 }
 
-interface ResBody {
+interface ResBody extends APIResponse {
   accessToken: {
     token: string;
     expiresIn: number;
@@ -51,6 +52,7 @@ const refreshToken: RequestHandler<{}, ResBody, ReqBody> = async function (req, 
         token: newRefreshToken,
         expiresIn: 14,
       },
+      message: "토큰이 갱신됐어요.",
     });
   });
 };

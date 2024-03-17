@@ -3,10 +3,11 @@ import getUserById from "model/user/getUserById";
 import ServerError from "error/ServerError";
 
 import type { RequestHandler } from "express";
+import type { APIResponse } from "api";
 
 interface ReqQuery {}
 
-interface ResBody {
+interface ResBody extends APIResponse {
   id: number;
   username: string;
   name: string;
@@ -38,6 +39,7 @@ const getPublicProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async functi
     createdAt: user.createdAt,
     profileImage: user.profileImage,
     email: user.email,
+    message: "사용자 정보를 불러왔어요.",
   });
 };
 

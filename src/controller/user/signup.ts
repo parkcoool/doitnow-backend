@@ -11,6 +11,7 @@ import verifyUsername from "util/verify/verifyUsername";
 import verifyName from "util/verify/verifyName";
 
 import type { RequestHandler } from "express";
+import type { APIResponse } from "api";
 
 interface ReqBody {
   password: string;
@@ -18,7 +19,7 @@ interface ReqBody {
   name: string;
 }
 
-interface ResBody {}
+interface ResBody extends APIResponse {}
 
 const signup: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, next) {
   const email = req.email;
@@ -50,7 +51,9 @@ const signup: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, n
     return next(new ServerError("사용자를 생성할 수 없어요."));
   }
 
-  return res.status(200).json({});
+  return res.status(200).json({
+    message: "사용자가 생성됐어요.",
+  });
 };
 
 export default signup;

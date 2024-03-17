@@ -9,13 +9,14 @@ import verifyEmail from "util/verify/verifyEmail";
 import verifyPassword from "util/verify/verifyPassword";
 
 import type { RequestHandler } from "express";
+import type { APIResponse } from "api";
 
 interface ReqBody {
   email?: string;
   password?: string;
 }
 
-interface ResBody {}
+interface ResBody extends APIResponse {}
 
 const updatePrivateProfile: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, next) {
   const email = req.email;
@@ -47,7 +48,9 @@ const updatePrivateProfile: RequestHandler<{}, ResBody, ReqBody> = async functio
     return next(new ServerError("사용자를 찾을 수 없어요."));
   }
 
-  return res.status(200).json({});
+  return res.status(200).json({
+    message: "사용자 정보가 변경됐어요.",
+  });
 };
 
 export default updatePrivateProfile;

@@ -12,6 +12,7 @@ import getSaltedHash from "util/common/getSaltedHash";
 import type { UserRow } from "db";
 import type { RequestHandler } from "express";
 import type { RowDataPacket, FieldPacket } from "mysql2";
+import type { APIResponse } from "api";
 
 interface ReqBody {
   email?: string;
@@ -19,7 +20,7 @@ interface ReqBody {
   password: string;
 }
 
-interface ResBody {
+interface ResBody extends APIResponse {
   accessToken: {
     token: string;
     expiresIn: number;
@@ -89,6 +90,7 @@ const login: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, ne
       token: refreshToken,
       expiresIn: 14,
     },
+    message: "로그인에 성공했어요.",
   });
 };
 
