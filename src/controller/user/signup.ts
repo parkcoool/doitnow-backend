@@ -1,9 +1,12 @@
 import { randomBytes } from "crypto";
+import { QueryError } from "mysql2";
+import { ER_DUP_ENTRY } from "mysql-error-keys";
 
 import createUser from "model/user/createUser";
 
 import ServerError from "error/ServerError";
 import InvalidValueError from "error/user/InvalidValueError";
+import DuplicationError from "error/user/DuplicationError";
 
 import getSaltedHash from "util/common/getSaltedHash";
 import verifyPassword from "util/verify/verifyPassword";
@@ -38,19 +41,26 @@ const signup: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, n
   const salt = randomBytes(32).toString("base64");
   const hashedPassword = getSaltedHash(password, salt);
 
-  const queryResult = await createUser({
-    email,
-    username,
-    name,
-    password: hashedPassword,
-    salt,
-    bio: null,
-    profileImage: null,
-  });
-  if (queryResult[0].affectedRows === 0) {
-    return next(new ServerError("사용자를 생성할 수 없어요."));
+  try {
+    const queryResult = await createUser({
+      email,
+      username,
+      name,
+      password: hashedPassword,
+      salt,
+      bio: null,
+      profileImage: null,
+    });
+    if (queryResult[0].affectedRows === 0) {
+      return next(new ServerError("사용자를 생성할 수 없어요."));
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      if ((error as QueryError).code === ER_DUP_ENTRY) {
+        return next(new DuplicationError("이름 또는 이메일"));
+      }
+    }
   }
-
   return res.status(200).json({
     message: "사용자가 생성됐어요.",
   });

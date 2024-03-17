@@ -1,4 +1,4 @@
-import createEmailVerifyCode from "model/emailVerifyCode/createEmailVerifyCode";
+import upsertEmailVerifyCode from "model/emailVerifyCode/upsertEmailVerifyCode";
 
 import ServerError from "error/ServerError";
 
@@ -11,7 +11,9 @@ interface ReqBody {
   email: string;
 }
 
-interface ResBody extends APIResponse {}
+interface ResBody extends APIResponse {
+  expiresAt: string;
+}
 
 const sendEmail: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, next) {
   const email = req.body.email.trim();
@@ -22,7 +24,7 @@ const sendEmail: RequestHandler<{}, ResBody, ReqBody> = async function (req, res
   const expiresAt = new Date();
   expiresAt.setMinutes(expiresAt.getMinutes() + 5);
 
-  const queryResult = await createEmailVerifyCode({ email, code: hashedCode, ipAddress, expiresAt });
+  const queryResult = await upsertEmailVerifyCode({ email, code: hashedCode, ipAddress, expiresAt });
   if (queryResult[0].affectedRows === 0) {
     return next(new ServerError("인증 코드를 등록하는 중에 문제가 발생했어요."));
   }
@@ -38,6 +40,7 @@ const sendEmail: RequestHandler<{}, ResBody, ReqBody> = async function (req, res
 
   res.status(200).json({
     message: "인증 코드가 발송됐어요.",
+    expiresAt: expiresAt.toISOString(),
   });
 };
 

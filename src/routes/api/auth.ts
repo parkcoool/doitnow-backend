@@ -10,10 +10,10 @@ import refreshToken from "controller/auth/refreshToken";
 const authRouter = express.Router();
 
 // 컨트롤러
-authRouter.post("/auth/email/send", sendEmail);
-authRouter.post("/auth/email/verify", verifyEmail);
-authRouter.post("/auth/login", login);
-authRouter.post("/auth/token", refreshToken);
+authRouter.post("/email/send", sendEmail);
+authRouter.post("/email/verify", verifyEmail);
+authRouter.post("/login", login);
+authRouter.post("/token", refreshToken);
 
 // 404 핸들 미들웨어
 authRouter.use(notFoundHandler);

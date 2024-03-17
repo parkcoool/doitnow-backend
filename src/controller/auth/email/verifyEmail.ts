@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import deleteEmailVerifyCode from "model/emailVerifyCode/deleteEmailVerifyCode";
-import ServerError from "error/ServerError";
+import InvalidValueError from "error/user/InvalidValueError";
 import getSaltedHash from "util/common/getSaltedHash";
 
 import type { RequestHandler } from "express";
@@ -30,10 +30,10 @@ const verifyEmail: RequestHandler<{}, ResBody, ReqBody> = async function (req, r
     code: hashedCode,
   });
   if (queryResult[0].affectedRows === 0) {
-    return next(new ServerError("인증 코드가 일치하지 않아요."));
+    return next(new InvalidValueError("인증 코드"));
   }
 
-  const token = jwt.sign({ email }, process.env.JWT_SECRET!, { expiresIn: "1h" });
+  const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY!, { expiresIn: "1h" });
 
   res.status(200).send({
     token: {

@@ -4,18 +4,18 @@ import type { UserRow } from "db";
 import type { FieldPacket, RowDataPacket } from "mysql2";
 
 export interface GetUserByUsernameProps {
-  username: string;
+  name: string;
   password?: string;
 }
 
-export default async function getUserById({ username, password }: GetUserByUsernameProps) {
+export default async function getUserByName({ name, password }: GetUserByUsernameProps) {
   let queryResult: [(UserRow & RowDataPacket)[], FieldPacket[]];
 
   if (password === undefined) {
-    queryResult = await db.query<(UserRow & RowDataPacket)[]>("SELECT * FROM user WHERE ?", { username });
+    queryResult = await db.query<(UserRow & RowDataPacket)[]>("SELECT * FROM user WHERE ?", { name });
   } else {
     queryResult = await db.query<(UserRow & RowDataPacket)[]>("SELECT * FROM user WHERE ? AND ?", [
-      { username },
+      { name },
       { password },
     ]);
   }

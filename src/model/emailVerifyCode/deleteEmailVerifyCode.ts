@@ -9,7 +9,7 @@ interface DeleteEmailVerifyCodeProps {
 
 export default async function deleteEmailVerifyCode({ code, email }: DeleteEmailVerifyCodeProps) {
   const queryResult = await db.query<ResultSetHeader>(
-    "DELETE FROM email_verify WHERE email = ? AND code = ? AND expiresAt > NOW()",
+    "DELETE FROM email_verify_code WHERE email = ? AND code = ? AND expiresAt > NOW()",
     [email, code]
   );
 

@@ -1,8 +1,13 @@
+import { QueryError } from "mysql2";
+import { ER_DUP_ENTRY } from "mysql-error-keys";
+
 import patchUserByEmail from "model/user/patchUserByEmail";
 import getUserByEmail from "model/user/getUserByEmail";
 
 import ServerError from "error/ServerError";
 import InvalidValueError from "error/user/InvalidValueError";
+import DuplicationError from "error/user/DuplicationError";
+import NotFoundError from "error/user/NotFoundError";
 
 import getSaltedHash from "util/common/getSaltedHash";
 import verifyEmail from "util/verify/verifyEmail";
@@ -36,16 +41,24 @@ const updatePrivateProfile: RequestHandler<{}, ResBody, ReqBody> = async functio
     const users = (await getUserByEmail({ email }))[0];
 
     if (users.length === 0) {
-      return next(new ServerError("사용자를 찾을 수 없어요."));
+      return next(new NotFoundError("사용자를 찾을 수 없어요."));
     }
 
     const salt = users[0].salt;
     hashedPassword = getSaltedHash(password, salt);
   }
 
-  const queryResult = await patchUserByEmail({ email, patch: { email: newEmail, password: hashedPassword } });
-  if (queryResult[0].affectedRows === 0) {
-    return next(new ServerError("사용자를 찾을 수 없어요."));
+  try {
+    const queryResult = await patchUserByEmail({ email, patch: { email: newEmail, password: hashedPassword } });
+    if (queryResult[0].affectedRows === 0) {
+      return next(new NotFoundError("사용자를 찾을 수 없어요."));
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      if ((error as QueryError).code === ER_DUP_ENTRY) {
+        return next(new DuplicationError("이메일"));
+      }
+    }
   }
 
   return res.status(200).json({

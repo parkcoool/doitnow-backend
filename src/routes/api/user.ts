@@ -13,11 +13,11 @@ import signup from "controller/user/signup";
 const userRouter = express.Router();
 
 // 컨트롤러
-userRouter.post("/user", requireEmailToken, signup);
-userRouter.get("/user", getPublicProfile);
-userRouter.get("/user/private", requireUserToken, getPrivateProfile);
-userRouter.patch("/user", requireUserToken, updatePublicProfile);
-userRouter.patch("/user/private", requireEmailToken, updatePrivateProfile);
+userRouter.post("", requireEmailToken, signup);
+userRouter.get("", getPublicProfile);
+userRouter.patch("/", requireUserToken, updatePublicProfile);
+userRouter.get("/private", requireUserToken, getPrivateProfile);
+userRouter.patch("/private", requireEmailToken, updatePrivateProfile);
 
 // 404 핸들 미들웨어
 userRouter.use(notFoundHandler);

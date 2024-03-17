@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import getUserByEmail from "model/user/getUserByEmail";
-import getUserByUsername from "model/user/getUserByUsername";
+import getUserByUsername from "model/user/getUserByName";
 
 import ServerError from "error/ServerError";
 import InvalidValueError from "error/user/InvalidValueError";
@@ -16,7 +16,7 @@ import type { APIResponse } from "api";
 
 interface ReqBody {
   email?: string;
-  username?: string;
+  name?: string;
   password: string;
 }
 
@@ -32,18 +32,18 @@ interface ResBody extends APIResponse {
 }
 
 const login: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, next) {
-  const { email, username, password } = req.body;
+  const { email, name, password } = req.body;
 
-  if ([email, username].filter((value) => value !== undefined).length !== 1) {
-    return next(new InvalidValueError("email, username"));
+  if ([email, name].filter((value) => value !== undefined).length !== 1) {
+    return next(new InvalidValueError("이메일과 이름"));
   }
 
   // 사용자 salt 가져오기
   let salt: string;
   {
     let queryResult: [(UserRow & RowDataPacket)[], FieldPacket[]];
-    if (username !== undefined) {
-      queryResult = await getUserByUsername({ username });
+    if (name !== undefined) {
+      queryResult = await getUserByUsername({ name });
     } else if (email !== undefined) {
       queryResult = await getUserByEmail({ email });
     } else {
@@ -63,8 +63,8 @@ const login: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, ne
   const hashedPassword = getSaltedHash(password, salt);
   let queryResult: [(UserRow & RowDataPacket)[], FieldPacket[]];
 
-  if (username !== undefined) {
-    queryResult = await getUserByUsername({ username, password: hashedPassword });
+  if (name !== undefined) {
+    queryResult = await getUserByUsername({ name, password: hashedPassword });
   } else if (email !== undefined) {
     queryResult = await getUserByEmail({ email, password: hashedPassword });
   } else {
@@ -78,8 +78,8 @@ const login: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, ne
 
   const id = users[0].id;
 
-  const accessToken = jwt.sign({ id }, process.env.JWT_SECRET!, { expiresIn: "1h" });
-  const refreshToken = jwt.sign({ id }, process.env.JWT_SECRET!, { expiresIn: "14d" });
+  const accessToken = jwt.sign({ id }, process.env.JWT_SECRET_KEY!, { expiresIn: "1h" });
+  const refreshToken = jwt.sign({ id }, process.env.JWT_SECRET_KEY!, { expiresIn: "14d" });
 
   res.status(200).send({
     accessToken: {

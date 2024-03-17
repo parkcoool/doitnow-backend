@@ -1,6 +1,7 @@
 import getUserById from "model/user/getUserById";
 
 import ServerError from "error/ServerError";
+import NotFoundError from "error/user/NotFoundError";
 
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
@@ -17,7 +18,7 @@ interface ResBody extends APIResponse {
   email: string;
 }
 
-const getPublicProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async function (req, res, next) {
+const getPrivateProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async function (req, res, next) {
   const userId = req.userId;
   if (userId === undefined) {
     return next(new ServerError("사용자의 id를 불러올 수 없어요."));
@@ -27,7 +28,7 @@ const getPublicProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async functi
 
   const users = queryResult[0];
   if (users.length === 0) {
-    return next(new ServerError("사용자를 찾을 수 없어요."));
+    return next(new NotFoundError("사용자를 찾을 수 없어요."));
   }
 
   const user = users[0];
@@ -43,4 +44,4 @@ const getPublicProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async functi
   });
 };
 
-export default getPublicProfile;
+export default getPrivateProfile;

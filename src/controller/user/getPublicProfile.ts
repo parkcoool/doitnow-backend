@@ -1,9 +1,10 @@
 import getUserByEmail from "model/user/getUserByEmail";
 import getUserById from "model/user/getUserById";
-import getUserByUsername from "model/user/getUserByUsername";
+import getUserByUsername from "model/user/getUserByName";
 
 import ServerError from "error/ServerError";
 import InvalidValueError from "error/user/InvalidValueError";
+import NotFoundError from "error/user/NotFoundError";
 
 import type { UserRow } from "db";
 import type { RowDataPacket, FieldPacket } from "mysql2";
@@ -11,7 +12,7 @@ import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
 
 interface ReqQuery {
-  username?: string;
+  name?: string;
   email?: string;
   id?: number;
 }
@@ -26,15 +27,15 @@ interface ResBody extends APIResponse {
 }
 
 const getPublicProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async function (req, res, next) {
-  const { username, email, id } = req.query;
+  const { name, email, id } = req.query;
 
-  if ([username, email, id].filter((v) => v !== undefined).length !== 1) {
-    return next(new InvalidValueError("username, email, id"));
+  if ([name, email, id].filter((v) => v !== undefined).length !== 1) {
+    return next(new InvalidValueError("사용자 이름, 이메일, id"));
   }
 
   let queryResult: [(UserRow & RowDataPacket)[], FieldPacket[]];
-  if (username !== undefined) {
-    queryResult = await getUserByUsername({ username });
+  if (name !== undefined) {
+    queryResult = await getUserByUsername({ name });
   } else if (email !== undefined) {
     queryResult = await getUserByEmail({ email });
   } else if (id !== undefined) {
@@ -45,7 +46,7 @@ const getPublicProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async functi
 
   const users = queryResult[0];
   if (users.length === 0) {
-    return next(new ServerError("사용자를 찾을 수 없어요."));
+    return next(new NotFoundError("사용자를 찾을 수 없어요."));
   }
 
   const user = users[0];
