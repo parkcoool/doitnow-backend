@@ -1,24 +1,32 @@
 import jwt from "jsonwebtoken";
+import { z } from "zod";
 
 import getUserByEmail from "model/user/getUserByEmail";
 import getUserByUsername from "model/user/getUserByName";
 
 import ServerError from "error/ServerError";
-import InvalidValueError from "error/user/InvalidValueError";
 import NotFoundError from "error/user/NotFoundError";
 
-import getSaltedHash from "util/common/getSaltedHash";
+import getSaltedHash from "util/getSaltedHash";
+import onlyOneDefined from "util/onlyOneDefined";
+
+import userSchema from "schema/user";
 
 import type { UserRow } from "db";
 import type { RequestHandler } from "express";
 import type { RowDataPacket, FieldPacket } from "mysql2";
 import type { APIResponse } from "api";
 
-interface ReqBody {
-  email?: string;
-  name?: string;
-  password: string;
-}
+export const LoginBody = z
+  .object({
+    email: userSchema.email.optional(),
+    name: userSchema.name.optional(),
+    password: userSchema.password,
+  })
+  .refine(({ email, name }) => onlyOneDefined({ email, name }), {
+    path: ["email", "name"],
+    message: "이메일 또는 이름 중 하나만 입력해주세요.",
+  });
 
 interface ResBody extends APIResponse {
   accessToken: {
@@ -31,12 +39,8 @@ interface ResBody extends APIResponse {
   };
 }
 
-const login: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, next) {
+const login: RequestHandler<{}, ResBody, z.infer<typeof LoginBody>> = async function (req, res, next) {
   const { email, name, password } = req.body;
-
-  if ([email, name].filter((value) => value !== undefined).length !== 1) {
-    return next(new InvalidValueError("이메일과 이름"));
-  }
 
   // 사용자 salt 가져오기
   let salt: string;

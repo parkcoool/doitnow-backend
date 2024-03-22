@@ -1,21 +1,32 @@
+import { z } from "zod";
+
 import getUserByEmail from "model/user/getUserByEmail";
 import getUserById from "model/user/getUserById";
 import getUserByUsername from "model/user/getUserByName";
 
 import ServerError from "error/ServerError";
-import InvalidValueError from "error/user/InvalidValueError";
 import NotFoundError from "error/user/NotFoundError";
+
+import onlyOneDefined from "util/onlyOneDefined";
+
+import userSchema from "schema/user";
 
 import type { UserRow } from "db";
 import type { RowDataPacket, FieldPacket } from "mysql2";
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
 
-interface ReqQuery {
-  name?: string;
-  email?: string;
-  id?: number;
-}
+export const GetPublicProfileQuery = z
+  .object({
+    name: userSchema.name,
+    email: userSchema.email,
+    id: z.string().refine((id) => parseInt(id) > 0, { path: ["id"], message: "id는 양의 정수여야 해요." }),
+  })
+  .partial()
+  .refine(onlyOneDefined, {
+    path: ["name", "email", "id"],
+    message: "이름, 이메일, 아이디 중 하나만 입력해주세요.",
+  });
 
 interface ResBody extends APIResponse {
   id: number;
@@ -26,12 +37,12 @@ interface ResBody extends APIResponse {
   profileImage: string | null;
 }
 
-const getPublicProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async function (req, res, next) {
+const getPublicProfile: RequestHandler<{}, ResBody, {}, z.infer<typeof GetPublicProfileQuery>> = async function (
+  req,
+  res,
+  next
+) {
   const { name, email, id } = req.query;
-
-  if ([name, email, id].filter((v) => v !== undefined).length !== 1) {
-    return next(new InvalidValueError("사용자 이름, 이메일, 아이디"));
-  }
 
   let queryResult: [(UserRow & RowDataPacket)[], FieldPacket[]];
   if (name !== undefined) {
@@ -39,7 +50,7 @@ const getPublicProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async functi
   } else if (email !== undefined) {
     queryResult = await getUserByEmail({ email });
   } else if (id !== undefined) {
-    queryResult = await getUserById({ id });
+    queryResult = await getUserById({ id: parseInt(id) });
   } else {
     return next(new ServerError("예상하지 못한 에러가 발생했어요."));
   }

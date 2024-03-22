@@ -1,41 +1,35 @@
 import { randomBytes } from "crypto";
 import { QueryError } from "mysql2";
 import { ER_DUP_ENTRY } from "mysql-error-keys";
+import { z } from "zod";
 
 import createUser from "model/user/createUser";
 
 import ServerError from "error/ServerError";
-import InvalidValueError from "error/user/InvalidValueError";
 import DuplicationError from "error/user/DuplicationError";
 
-import getSaltedHash from "util/common/getSaltedHash";
-import verifyPassword from "util/verify/verifyPassword";
-import verifyUsername from "util/verify/verifyUsername";
-import verifyName from "util/verify/verifyName";
+import getSaltedHash from "util/getSaltedHash";
+
+import userSchema from "schema/user";
 
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
 
-interface ReqBody {
-  password: string;
-  username: string;
-  name: string;
-}
+export const SignupBody = z.object({
+  password: userSchema.password,
+  username: userSchema.username,
+  name: userSchema.name,
+});
 
 interface ResBody extends APIResponse {}
 
-const signup: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, next) {
+const signup: RequestHandler<{}, ResBody, z.infer<typeof SignupBody>> = async function (req, res, next) {
   const email = req.email;
   if (email === undefined) {
     return next(new ServerError("사용자의 이메일 주소를 불러올 수 없어요."));
   }
 
   const { password, username, name } = req.body;
-
-  // 값 검증
-  if (!verifyPassword(password)) return next(new InvalidValueError("password"));
-  if (!verifyUsername(username)) return next(new InvalidValueError("username"));
-  if (!verifyName(name)) return next(new InvalidValueError("name"));
 
   // 비밀번호를 해싱한다.
   const salt = randomBytes(32).toString("base64");

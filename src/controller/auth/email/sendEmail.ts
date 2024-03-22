@@ -1,21 +1,25 @@
+import { z } from "zod";
+
 import upsertEmailVerifyCode from "model/emailVerifyCode/upsertEmailVerifyCode";
 
 import ServerError from "error/ServerError";
 
-import getSaltedHash from "util/common/getSaltedHash";
+import getSaltedHash from "util/getSaltedHash";
+
+import userSchema from "schema/user";
 
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
 
-interface ReqBody {
-  email: string;
-}
+export const SendEmailBody = z.object({
+  email: userSchema.email,
+});
 
 interface ResBody extends APIResponse {
   expiresAt: string;
 }
 
-const sendEmail: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, next) {
+const sendEmail: RequestHandler<{}, ResBody, z.infer<typeof SendEmailBody>> = async function (req, res, next) {
   const email = req.body.email.trim();
 
   const ipAddress = req.ip;

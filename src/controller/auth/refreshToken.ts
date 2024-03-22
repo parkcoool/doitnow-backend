@@ -1,16 +1,19 @@
 import jwt from "jsonwebtoken";
+import { z } from "zod";
 
 import getUserById from "model/user/getUserById";
 
 import InvalidValueError from "error/user/InvalidValueError";
 import NotFoundError from "error/user/NotFoundError";
 
+import tokenSchema from "schema/token";
+
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
 
-interface ReqBody {
-  refreshToken: string;
-}
+export const RefreshTokenBody = z.object({
+  refreshToken: tokenSchema.token,
+});
 
 interface ResBody extends APIResponse {
   accessToken: {
@@ -23,12 +26,12 @@ interface ResBody extends APIResponse {
   };
 }
 
-const refreshToken: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, next) {
+const refreshToken: RequestHandler<{}, ResBody, z.infer<typeof RefreshTokenBody>> = async function (req, res, next) {
   const { refreshToken } = req.body;
 
   jwt.verify(refreshToken, process.env.JWT_SECRET_KEY!, async (error, decodedJwt) => {
     if (error || decodedJwt === undefined || typeof decodedJwt === "string") {
-      return next(new InvalidValueError("token"));
+      return next(new InvalidValueError(["token"], "값이 올바르지 않아요."));
     }
 
     const id: number = decodedJwt.id;

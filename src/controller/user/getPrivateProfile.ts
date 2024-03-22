@@ -6,8 +6,6 @@ import NotFoundError from "error/user/NotFoundError";
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
 
-interface ReqQuery {}
-
 interface ResBody extends APIResponse {
   id: number;
   username: string;
@@ -18,7 +16,7 @@ interface ResBody extends APIResponse {
   email: string;
 }
 
-const getPrivateProfile: RequestHandler<{}, ResBody, {}, ReqQuery> = async function (req, res, next) {
+const getPrivateProfile: RequestHandler<{}, ResBody, {}> = async function (req, res, next) {
   const userId = req.userId;
   if (userId === undefined) {
     return next(new ServerError("사용자의 id를 불러올 수 없어요."));

@@ -18,7 +18,7 @@ export default function requireEmailToken(req: Request, res: Response, next: Nex
 
   jwt.verify(emailToken, jwtSecretKey, (error, decodedJwt) => {
     if (error || decodedJwt === undefined || typeof decodedJwt === "string") {
-      return next(new InvalidValueError("token"));
+      return next(new InvalidValueError(["Authorization"], "값이 올바르지 않아요."));
     }
 
     req.email = decodedJwt.email;

@@ -1,44 +1,40 @@
 import { QueryError } from "mysql2";
 import { ER_DUP_ENTRY } from "mysql-error-keys";
+import { z } from "zod";
 
 import patchUserById from "model/user/patchUserById";
 
 import ServerError from "error/ServerError";
-import InvalidValueError from "error/user/InvalidValueError";
 import DuplicationError from "error/user/DuplicationError";
 import NotFoundError from "error/user/NotFoundError";
 
-import verifyUsername from "util/verify/verifyUsername";
-import verifyName from "util/verify/verifyName";
-import verifyBio from "util/verify/verifyBio";
-import verifyImageUrl from "util/verify/verifyImageUrl";
+import userSchema from "schema/user";
 
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
 
-interface ReqBody {
-  username?: string;
-  name?: string;
-  bio?: string | null;
-  profileImage?: string | null;
-}
+export const UpdatePublicProfileBody = z
+  .object({
+    username: userSchema.username,
+    name: userSchema.name,
+    bio: userSchema.bio,
+    profileImage: userSchema.profileImage,
+  })
+  .partial();
 
 interface ResBody extends APIResponse {}
 
-const updatePublicProfile: RequestHandler<{}, ResBody, ReqBody> = async function (req, res, next) {
+const updatePublicProfile: RequestHandler<{}, ResBody, z.infer<typeof UpdatePublicProfileBody>> = async function (
+  req,
+  res,
+  next
+) {
   const userId = req.userId;
   if (userId === undefined) {
     return next(new ServerError("사용자의 id를 불러올 수 없어요."));
   }
 
   const { username, name, bio, profileImage } = req.body;
-
-  // 값 검증
-  if (username !== undefined && !verifyUsername(username)) return next(new InvalidValueError("사용자 이름"));
-  if (name !== undefined && !verifyName(name)) return next(new InvalidValueError("이름"));
-  if (bio !== undefined && bio !== null && !verifyBio(bio)) return next(new InvalidValueError("소개"));
-  if (profileImage !== undefined && profileImage !== null && !verifyImageUrl(profileImage))
-    return next(new InvalidValueError("프로필 사진"));
 
   try {
     const queryResult = await patchUserById({ id: userId, patch: { username, name, bio, profileImage } });

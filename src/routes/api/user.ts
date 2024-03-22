@@ -1,25 +1,30 @@
 import express from "express";
 
+import validateRequest from "middleware/validate/validateRequest";
 import requireUserToken from "middleware/token/requireUserToken";
 import requireEmailToken from "middleware/token/requireEmailToken";
-import notFoundHandler from "middleware/common/notFoundHandler";
+import apiNotFoundErrorHandler from "middleware/error/apiNotFoundErrorHandler";
 
-import updatePublicProfile from "controller/user/updatePublicProfile";
-import updatePrivateProfile from "controller/user/updatePrivateProfile";
-import getPublicProfile from "controller/user/getPublicProfile";
 import getPrivateProfile from "controller/user/getPrivateProfile";
-import signup from "controller/user/signup";
+import getPublicProfile, { GetPublicProfileQuery } from "controller/user/getPublicProfile";
+import signup, { SignupBody } from "controller/user/signup";
+import updatePrivateProfile, { UpdatePrivateProfileBody } from "controller/user/updatePrivateProfile";
+import updatePublicProfile, { UpdatePublicProfileBody } from "controller/user/updatePublicProfile";
 
 const userRouter = express.Router();
 
 // 컨트롤러
-userRouter.post("", requireEmailToken, signup);
-userRouter.get("", getPublicProfile);
-userRouter.patch("/", requireUserToken, updatePublicProfile);
+userRouter.post("", [requireEmailToken, validateRequest({ body: SignupBody }), signup]);
+userRouter.get("", validateRequest({ query: GetPublicProfileQuery }), getPublicProfile);
+userRouter.patch("/", [validateRequest({ body: UpdatePublicProfileBody }), requireUserToken, updatePublicProfile]);
 userRouter.get("/private", requireUserToken, getPrivateProfile);
-userRouter.patch("/private", requireEmailToken, updatePrivateProfile);
+userRouter.patch("/private", [
+  validateRequest({ body: UpdatePrivateProfileBody }),
+  requireEmailToken,
+  updatePrivateProfile,
+]);
 
 // 404 핸들 미들웨어
-userRouter.use(notFoundHandler);
+userRouter.use(apiNotFoundErrorHandler);
 
 export default userRouter;
