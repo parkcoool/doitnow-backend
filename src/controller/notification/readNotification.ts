@@ -36,7 +36,7 @@ const getNotifications: RequestHandler<{}, ResBody, {}, z.infer<typeof ReadNotif
   else queryResult = await readAllNotifications({ userId });
 
   const affectedRows = queryResult[0].affectedRows;
-  if (affectedRows === 0) {
+  if (id !== undefined && affectedRows === 0) {
     return next(new InvalidValueError(["id"]));
   }
 
