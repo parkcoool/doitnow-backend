@@ -1,6 +1,10 @@
 import { NotificationType } from "constant/notificationType";
 
 declare module "db" {
+  interface CountRow {
+    count: number;
+  }
+
   interface UserRow {
     id: number;
     email: string;
