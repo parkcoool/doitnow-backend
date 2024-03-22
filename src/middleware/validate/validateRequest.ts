@@ -10,8 +10,6 @@ z.setErrorMap((error, ctx) => {
   const pathStringAsSubject = `${pathString}${hasJongseong(pathString) ? "이" : "가"}`;
   const pathStringWithBojosa = `${pathString}${hasJongseong(pathString) ? "은" : "는"}`;
 
-  console.log(error, pathString);
-
   switch (error.code) {
     case z.ZodIssueCode.invalid_type: {
       if (error.received === "undefined") return { message: `${pathStringAsSubject} 전송되지 않았어요.` };

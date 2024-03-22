@@ -8,12 +8,13 @@ import userErrorHandler from "middleware/error/userErrorHandler";
 import serverErrorHandler from "middleware/error/serverErrorHandler";
 import apiNotFoundErrorHandler from "middleware/error/apiNotFoundErrorHandler";
 import zodErrorHandler from "middleware/error/zodErrorHandler";
+import trimBodyString from "middleware/common/trimBodyString";
 
 const apiRouter = express.Router();
 
 // 라우터
-apiRouter.use("/auth", authRouter);
-apiRouter.use("/user", userRouter);
+apiRouter.use("/auth", trimBodyString, authRouter);
+apiRouter.use("/user", trimBodyString, userRouter);
 
 // 404 핸들 미들웨어
 apiRouter.use(apiNotFoundErrorHandler);

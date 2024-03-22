@@ -25,7 +25,7 @@ const password = z
   .min(8)
   .max(20)
   .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]+$/, {
-    message: "비밀번호는 영어, 숫자를 조합하여 8자 이상, 20자 이하여야 해요.",
+    message: "비밀번호는 영어, 숫자를 조합하여야 해요.",
   });
 
 const bio = z.string().max(100).or(z.null());
