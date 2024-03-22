@@ -7,6 +7,7 @@ import errorHandler from "middleware/error/errorHandler";
 import userErrorHandler from "middleware/error/userErrorHandler";
 import serverErrorHandler from "middleware/error/serverErrorHandler";
 import apiNotFoundErrorHandler from "middleware/error/apiNotFoundErrorHandler";
+import zodErrorHandler from "middleware/error/zodErrorHandler";
 
 const apiRouter = express.Router();
 
@@ -18,6 +19,6 @@ apiRouter.use("/user", userRouter);
 apiRouter.use(apiNotFoundErrorHandler);
 
 // 에러 핸들 미들웨어
-apiRouter.use(userErrorHandler, serverErrorHandler, errorHandler);
+apiRouter.use(zodErrorHandler, userErrorHandler, serverErrorHandler, errorHandler);
 
 export default apiRouter;

@@ -18,7 +18,7 @@ export default function requireUserToken(req: Request, res: Response, next: Next
 
   jwt.verify(userToken, jwtSecretKey, (error, decodedJwt) => {
     if (error || decodedJwt === undefined || typeof decodedJwt === "string") {
-      return next(new InvalidValueError(["Authorization"], "값이 올바르지 않아요."));
+      return next(new InvalidValueError(["userToken"]));
     }
 
     req.userId = decodedJwt.id;

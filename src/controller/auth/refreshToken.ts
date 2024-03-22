@@ -31,7 +31,7 @@ const refreshToken: RequestHandler<{}, ResBody, z.infer<typeof RefreshTokenBody>
 
   jwt.verify(refreshToken, process.env.JWT_SECRET_KEY!, async (error, decodedJwt) => {
     if (error || decodedJwt === undefined || typeof decodedJwt === "string") {
-      return next(new InvalidValueError(["token"], "값이 올바르지 않아요."));
+      return next(new InvalidValueError(["token"]));
     }
 
     const id: number = decodedJwt.id;

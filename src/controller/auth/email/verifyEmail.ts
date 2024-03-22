@@ -35,7 +35,7 @@ const verifyEmail: RequestHandler<{}, ResBody, z.infer<typeof VerifyEmailBody>> 
     code: hashedCode,
   });
   if (queryResult[0].affectedRows === 0) {
-    return next(new InvalidValueError(["인증 코드"], "값이 올바르지 않아요."));
+    return next(new InvalidValueError(["인증 코드"]));
   }
 
   const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY!, { expiresIn: "1h" });
