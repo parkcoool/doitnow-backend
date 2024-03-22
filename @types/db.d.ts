@@ -1,3 +1,5 @@
+import { NotificationType } from "constant/notificationType";
+
 declare module "db" {
   interface UserRow {
     id: number;
@@ -16,6 +18,16 @@ declare module "db" {
     code: string;
     ipAddress: string;
     expiresAt: string;
+    createdAt: string;
+  }
+
+  interface NotificationRow {
+    id: number;
+    userId: number;
+    text: string;
+    link: string;
+    type: NotificationType;
+    read: boolean;
     createdAt: string;
   }
 }
