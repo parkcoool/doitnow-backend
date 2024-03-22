@@ -44,7 +44,7 @@ const updatePublicProfile: RequestHandler<{}, ResBody, z.infer<typeof UpdatePubl
   } catch (error) {
     if (error instanceof Error) {
       if ((error as QueryError).code === ER_DUP_ENTRY) {
-        return next(new DuplicationError("이름 또는 이메일"));
+        return next(new DuplicationError(["이름", "이메일"]));
       }
     }
   }

@@ -60,7 +60,7 @@ const updatePrivateProfile: RequestHandler<{}, ResBody, z.infer<typeof UpdatePri
   } catch (error) {
     if (error instanceof Error) {
       if ((error as QueryError).code === ER_DUP_ENTRY) {
-        return next(new DuplicationError("이메일"));
+        return next(new DuplicationError(["이메일"]));
       }
     }
   }
