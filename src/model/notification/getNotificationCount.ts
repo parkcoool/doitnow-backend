@@ -9,10 +9,8 @@ export interface GetNotificationCountProps {
 
 export default async function getNotificationCount({ userId }: GetNotificationCountProps) {
   const queryResult = await db.query<(CountRow & RowDataPacket)[]>(
-    "SELECT COUNT(*) AS count FROM notification WHERE ?",
-    {
-      userId,
-    }
+    "SELECT COUNT(*) AS count FROM notification WHERE userId = ? AND `read` = 0",
+    [userId]
   );
 
   return queryResult;
