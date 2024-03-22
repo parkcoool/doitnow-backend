@@ -28,7 +28,8 @@ const password = z
     message: "비밀번호는 영어, 숫자를 조합하여야 해요.",
   });
 
-const bio = z.string().max(100).or(z.null());
+const bio = z.string().min(1).max(100).or(z.null());
+
 const profileImage = z.string().max(512).url().or(z.null());
 
 const userSchema = {

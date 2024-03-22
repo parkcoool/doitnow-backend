@@ -37,7 +37,7 @@ const updatePrivateProfile: RequestHandler<{}, ResBody, z.infer<typeof UpdatePri
   if (email === undefined) return next(new ServerError("사용자의 이메일 주소를 불러올 수 없어요."));
 
   const { emailToken, password } = req.body;
-  let newEmail: string | undefined = emailToken && (jwt.decode(emailToken) as JwtPayload).email;
+  const newEmail = emailToken && ((jwt.decode(emailToken) as JwtPayload).email as string);
 
   // 비밀번호가 변경되는 경우 새로운 비밀번호를 해싱한다.
   let hashedPassword: string | undefined;
