@@ -5,14 +5,23 @@ import type { NotificationRow } from "db";
 
 export interface GetNotificationsProps {
   userId: number;
-  offset: number;
+  offsetDate?: string;
 }
 
-export default async function getNotifications({ userId, offset }: GetNotificationsProps) {
-  const queryResult = await db.query<(NotificationRow & RowDataPacket)[]>(
-    "SELECT * FROM notification WHERE ? ORDER BY createdAt DESC LIMIT 10 OFFSET ?",
-    [{ userId }, offset]
-  );
+export default async function getNotifications({ userId, offsetDate }: GetNotificationsProps) {
+  if (offsetDate === undefined) {
+    const queryResult = await db.query<(NotificationRow & RowDataPacket)[]>(
+      "SELECT * FROM notification WHERE ? ORDER BY createdAt DESC LIMIT 10",
+      { userId }
+    );
 
-  return queryResult;
+    return queryResult;
+  } else {
+    const queryResult = await db.query<(NotificationRow & RowDataPacket)[]>(
+      "SELECT * FROM notification WHERE ? ORDER BY createdAt DESC LIMIT 10 WHERE createdAt < ?",
+      [{ userId }, offsetDate]
+    );
+
+    return queryResult;
+  }
 }
