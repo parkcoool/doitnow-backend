@@ -1,16 +1,6 @@
 import db from "model";
 
-interface Row {
-  id: number;
-  email: string;
-  name: string;
-  username: string;
-  bio: string | null;
-  createdAt: string;
-  profileImage: string | null;
-  isFriend: boolean;
-}
-
+import type { ProfileRow } from "db";
 import type { RowDataPacket } from "mysql2";
 
 export interface GetUserByIdProps {
@@ -19,7 +9,7 @@ export interface GetUserByIdProps {
 }
 
 export default async function getProfileById({ viewerId, targetId }: GetUserByIdProps) {
-  const queryResult = await db.query<(Row & RowDataPacket)[]>(
+  const queryResult = await db.query<(ProfileRow & RowDataPacket)[]>(
     `SELECT
       u.id,
       u.email,
@@ -29,9 +19,10 @@ export default async function getProfileById({ viewerId, targetId }: GetUserById
       u.createdAt,
       u.profileImage,
       CASE
-          WHEN f.id IS NOT NULL THEN 1
-          ELSE 0
-      END AS isFriend
+        WHEN f.status = 'accepted' THEN 'accepted'
+        WHEN f.to = ? THEN 'received'
+        ELSE f.status
+    END AS friendStatus
     FROM
       user u
     LEFT JOIN
@@ -40,10 +31,8 @@ export default async function getProfileById({ viewerId, targetId }: GetUserById
       u.id = ?
     LIMIT
       1`,
-    [viewerId, viewerId, targetId]
+    [viewerId, viewerId, viewerId, targetId]
   );
-
-  queryResult[0] = queryResult[0].map((row) => ({ ...row, isFriend: Boolean(row.isFriend) }));
 
   return queryResult;
 }

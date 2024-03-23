@@ -44,4 +44,15 @@ declare module "db" {
     createdAt: string;
     modifiedAt: string;
   }
+
+  interface ProfileRow {
+    id: number;
+    email: string;
+    name: string;
+    username: string;
+    bio: string | null;
+    createdAt: string;
+    profileImage: string | null;
+    friendStatus: FriendStatus | null;
+  }
 }

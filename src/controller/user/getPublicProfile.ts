@@ -2,16 +2,16 @@ import { z } from "zod";
 
 import getProfileByEmail from "model/profile/getProfileByEmail";
 import getProfileById from "model/profile/getProfileById";
-import getProfileByName, { ProfileRow } from "model/profile/getProfileByName";
+import getProfileByName from "model/profile/getProfileByName";
 
 import ServerError from "error/ServerError";
 import NotFoundError from "error/user/NotFoundError";
 
 import onlyOneDefined from "util/onlyOneDefined";
-
+import { FriendStatus } from "constant/friendStatus";
 import userSchema from "schema/user";
 
-import type { UserRow } from "db";
+import type { ProfileRow } from "db";
 import type { RowDataPacket, FieldPacket } from "mysql2";
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
@@ -35,7 +35,7 @@ interface ResBody extends APIResponse {
   bio: string | null;
   createdAt: string;
   profileImage: string | null;
-  isFriend: boolean;
+  friendStatus: FriendStatus | null;
 }
 
 const getPublicProfile: RequestHandler<{}, ResBody, {}, z.infer<typeof GetPublicProfileQuery>> = async function (
@@ -74,7 +74,7 @@ const getPublicProfile: RequestHandler<{}, ResBody, {}, z.infer<typeof GetPublic
     bio: profile.bio,
     createdAt: profile.createdAt,
     profileImage: profile.profileImage,
-    isFriend: profile.isFriend,
+    friendStatus: profile.friendStatus,
     message: "사용자 정보를 불러왔어요.",
   });
 };
