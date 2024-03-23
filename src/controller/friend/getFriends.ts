@@ -37,7 +37,7 @@ const getFriends: RequestHandler<{}, ResBody, {}, z.infer<typeof GetFriendsQuery
     userId,
     offset: offset === undefined ? undefined : parseInt(offset),
   });
-  const hasMore = queryResult[0][0].hasMore;
+  const hasMore = queryResult[0][0]?.hasMore ?? false;
   const friends = queryResult[0].map((friend) => ({
     id: friend.id,
     username: friend.username,
@@ -46,7 +46,7 @@ const getFriends: RequestHandler<{}, ResBody, {}, z.infer<typeof GetFriendsQuery
     bio: friend.bio,
   }));
 
-  return res.status(200).json({ friends, hasMore, message: "알림을 불러왔어요." });
+  return res.status(200).json({ friends, hasMore, message: "친구를 불러왔어요." });
 };
 
 export default getFriends;

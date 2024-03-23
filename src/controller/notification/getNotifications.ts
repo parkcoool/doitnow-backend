@@ -41,7 +41,7 @@ const getNotifications: RequestHandler<{}, ResBody, {}, z.infer<typeof GetNotifi
     userId,
     offsetDate: offsetDate === undefined ? undefined : new Date(offsetDate),
   });
-  const hasMore = queryResult[0][0].hasMore;
+  const hasMore = queryResult[0][0]?.hasMore ?? false;
   const notifications = queryResult[0].map((notification) => ({
     id: notification.id,
     text: notification.text,
