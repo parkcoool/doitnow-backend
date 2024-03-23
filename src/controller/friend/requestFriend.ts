@@ -3,6 +3,7 @@ import { ER_DUP_ENTRY } from "mysql-error-keys";
 import { z } from "zod";
 
 import createFriendRequest from "model/friend/createFriendRequest";
+import getUserById from "model/user/getUserById";
 
 import InvalidValueError from "error/user/InvalidValueError";
 import UserError from "error/UserError";
@@ -12,7 +13,6 @@ import userSchema from "schema/user";
 
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
-import getUserById from "model/user/getUserById";
 
 export const RequestFriendBody = z.object({
   to: userSchema.id,

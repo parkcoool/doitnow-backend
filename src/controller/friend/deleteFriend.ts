@@ -1,16 +1,12 @@
-import { QueryError } from "mysql2";
-import { ER_DUP_ENTRY } from "mysql-error-keys";
 import { z } from "zod";
 
 import deleteFriend_ from "model/friend/deleteFriend";
 
-import InvalidValueError from "error/user/InvalidValueError";
 import UserError from "error/UserError";
 import ServerError from "error/ServerError";
 
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
-import getUserById from "model/user/getUserById";
 
 export const DeleteFriendQuery = z.object({
   to: z.string().refine((id) => parseInt(id) > 0, { path: ["id"], message: "to는 양의 정수여야 해요." }),
