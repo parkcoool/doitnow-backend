@@ -7,7 +7,7 @@ import type { ResultSetHeader } from "mysql2";
 interface CreateNotificationProps {
   userId: number;
   text: string;
-  link: string;
+  link?: string;
   type: NotificationType;
 }
 
