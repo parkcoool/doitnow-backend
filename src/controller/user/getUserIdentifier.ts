@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import getUserByEmail from "model/user/getUserByEmail";
 import getUserById from "model/user/getUserById";
-import getUserByUsername from "model/user/getUserByName";
+import getUserByName from "model/user/getUserByName";
 
 import ServerError from "error/ServerError";
 import NotFoundError from "error/user/NotFoundError";
@@ -43,7 +43,7 @@ const getUserIdentifier: RequestHandler<{}, ResBody, {}, z.infer<typeof GetUserI
 
   let queryResult: [(UserRow & RowDataPacket)[], FieldPacket[]];
   if (name !== undefined) {
-    queryResult = await getUserByUsername({ name });
+    queryResult = await getUserByName({ name });
   } else if (email !== undefined) {
     queryResult = await getUserByEmail({ email });
   } else if (id !== undefined) {

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import getUserByEmail from "model/user/getUserByEmail";
 import getUserById from "model/user/getUserById";
-import getUserByUsername from "model/user/getUserByName";
+import getUserByName from "model/user/getUserByName";
 
 import ServerError from "error/ServerError";
 import NotFoundError from "error/user/NotFoundError";
@@ -35,6 +35,7 @@ interface ResBody extends APIResponse {
   bio: string | null;
   createdAt: string;
   profileImage: string | null;
+  isFriend: boolean;
 }
 
 const getPublicProfile: RequestHandler<{}, ResBody, {}, z.infer<typeof GetPublicProfileQuery>> = async function (
@@ -46,7 +47,7 @@ const getPublicProfile: RequestHandler<{}, ResBody, {}, z.infer<typeof GetPublic
 
   let queryResult: [(UserRow & RowDataPacket)[], FieldPacket[]];
   if (name !== undefined) {
-    queryResult = await getUserByUsername({ name });
+    queryResult = await getUserByName({ name });
   } else if (email !== undefined) {
     queryResult = await getUserByEmail({ email });
   } else if (id !== undefined) {
@@ -68,6 +69,7 @@ const getPublicProfile: RequestHandler<{}, ResBody, {}, z.infer<typeof GetPublic
     bio: user.bio,
     createdAt: user.createdAt,
     profileImage: user.profileImage,
+    isFriend: false,
     message: "사용자 정보를 불러왔어요.",
   });
 };

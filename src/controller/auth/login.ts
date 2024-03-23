@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { z } from "zod";
 
 import getUserByEmail from "model/user/getUserByEmail";
-import getUserByUsername from "model/user/getUserByName";
+import getUserByName from "model/user/getUserByName";
 
 import ServerError from "error/ServerError";
 import NotFoundError from "error/user/NotFoundError";
@@ -47,7 +47,7 @@ const login: RequestHandler<{}, ResBody, z.infer<typeof LoginBody>> = async func
   {
     let queryResult: [(UserRow & RowDataPacket)[], FieldPacket[]];
     if (name !== undefined) {
-      queryResult = await getUserByUsername({ name });
+      queryResult = await getUserByName({ name });
     } else if (email !== undefined) {
       queryResult = await getUserByEmail({ email });
     } else {
@@ -68,7 +68,7 @@ const login: RequestHandler<{}, ResBody, z.infer<typeof LoginBody>> = async func
   let queryResult: [(UserRow & RowDataPacket)[], FieldPacket[]];
 
   if (name !== undefined) {
-    queryResult = await getUserByUsername({ name, password: hashedPassword });
+    queryResult = await getUserByName({ name, password: hashedPassword });
   } else if (email !== undefined) {
     queryResult = await getUserByEmail({ email, password: hashedPassword });
   } else {
