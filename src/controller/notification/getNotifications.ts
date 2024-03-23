@@ -41,6 +41,7 @@ const getNotifications: RequestHandler<{}, ResBody, {}, z.infer<typeof GetNotifi
     userId,
     offsetDate: offsetDate === undefined ? undefined : new Date(offsetDate),
   });
+  const hasMore = queryResult[0][0].hasMore;
   const notifications = queryResult[0].map((notification) => ({
     id: notification.id,
     text: notification.text,
@@ -48,12 +49,9 @@ const getNotifications: RequestHandler<{}, ResBody, {}, z.infer<typeof GetNotifi
     type: notification.type,
     read: notification.read,
     createdAt: notification.createdAt,
-    hasMore: notification.hasMore,
   }));
 
-  return res
-    .status(200)
-    .json({ notifications, hasMore: notifications[0]?.hasMore ?? false, message: "알림을 불러왔어요." });
+  return res.status(200).json({ notifications, hasMore, message: "알림을 불러왔어요." });
 };
 
 export default getNotifications;

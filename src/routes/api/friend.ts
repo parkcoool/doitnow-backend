@@ -9,6 +9,7 @@ import cancelFriendRequest, { CancelFriendRequestBody } from "controller/friend/
 import deleteFriend, { DeleteFriendQuery } from "controller/friend/deleteFriend";
 import rejectFriendRequest, { RejectFriendRequestBody } from "controller/friend/rejectFriendRequest";
 import requestFriend, { RequestFriendBody } from "controller/friend/requestFriend";
+import getFriends, { GetFriendsQuery } from "controller/friend/getFriends";
 
 const friendrouter = express.Router();
 
@@ -30,6 +31,7 @@ friendrouter.post("/reject", [
   rejectFriendRequest,
 ]);
 friendrouter.post("/", [requireUserToken, validateRequest({ body: RequestFriendBody }), requestFriend]);
+friendrouter.get("/", [requireUserToken, validateRequest({ query: GetFriendsQuery }), getFriends]);
 
 // 404 핸들 미들웨어
 friendrouter.use(apiNotFoundErrorHandler);
