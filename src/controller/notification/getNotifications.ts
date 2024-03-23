@@ -36,7 +36,10 @@ const getNotifications: RequestHandler<{}, ResBody, {}, z.infer<typeof GetNotifi
 
   const { offsetDate } = req.query;
 
-  const queryResult = await getNotifications_({ userId, offsetDate });
+  const queryResult = await getNotifications_({
+    userId,
+    offsetDate: offsetDate === undefined ? undefined : new Date(offsetDate),
+  });
   const notifications = queryResult[0].map((notification) => ({
     id: notification.id,
     text: notification.text,

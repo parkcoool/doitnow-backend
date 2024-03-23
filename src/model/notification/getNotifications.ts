@@ -5,7 +5,7 @@ import type { NotificationRow } from "db";
 
 export interface GetNotificationsProps {
   userId: number;
-  offsetDate?: string;
+  offsetDate?: Date;
 }
 
 export default async function getNotifications({ userId, offsetDate }: GetNotificationsProps) {
@@ -18,7 +18,7 @@ export default async function getNotifications({ userId, offsetDate }: GetNotifi
     );
   } else {
     queryResult = await db.query<(NotificationRow & RowDataPacket)[]>(
-      "SELECT * FROM notification WHERE ? ORDER BY `read`, createdAt DESC LIMIT 10 WHERE createdAt < ?",
+      "SELECT * FROM notification WHERE ? AND createdAt < STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s.%f') ORDER BY `read`, createdAt DESC LIMIT 10",
       [{ userId }, offsetDate]
     );
   }
