@@ -7,6 +7,7 @@ import apiNotFoundErrorHandler from "middleware/error/apiNotFoundErrorHandler";
 import getNotificationCount from "controller/notification/getNotificationCount";
 import getNotifications, { GetNotificationsQuery } from "controller/notification/getNotifications";
 import readNotification, { ReadNotificationBody } from "controller/notification/readNotification";
+import deleteNotification, { DeleteNotificationBody } from "controller/notification/deleteNotification";
 
 const notificationRouter = express.Router();
 
@@ -14,6 +15,11 @@ const notificationRouter = express.Router();
 notificationRouter.get("/count", requireUserToken, getNotificationCount);
 notificationRouter.get("/", [requireUserToken, validateRequest({ query: GetNotificationsQuery }), getNotifications]);
 notificationRouter.patch("/", [requireUserToken, validateRequest({ body: ReadNotificationBody }), readNotification]);
+notificationRouter.delete("/", [
+  requireUserToken,
+  validateRequest({ body: DeleteNotificationBody }),
+  deleteNotification,
+]);
 
 // 404 핸들 미들웨어
 notificationRouter.use(apiNotFoundErrorHandler);
