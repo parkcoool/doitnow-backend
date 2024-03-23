@@ -24,6 +24,10 @@ export default function getKoreanPath(path: (string | number)[]) {
         return "사용자 토큰";
       case "emailToken":
         return "이메일 토큰";
+      case "from":
+        return "보낸 사람";
+      case "to":
+        return "받는 사람";
     }
     return key;
   });

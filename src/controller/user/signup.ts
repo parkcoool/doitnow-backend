@@ -54,6 +54,7 @@ const signup: RequestHandler<{}, ResBody, z.infer<typeof SignupBody>> = async fu
         return next(new DuplicationError(["이름", "이메일"]));
       }
     }
+    throw error;
   }
   return res.status(200).json({
     message: "사용자가 생성됐어요.",

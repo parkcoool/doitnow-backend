@@ -8,10 +8,10 @@ interface AcceptFriendRequestProps {
   to: number;
 }
 
-export default async function createFriendRequest({ from, to }: AcceptFriendRequestProps) {
+export default async function acceptFriendRequest({ from, to }: AcceptFriendRequestProps) {
   const queryResult = await db.query<ResultSetHeader>(
-    "UPDATE friend SET status = ? WHERE `from` = ? AND `to` = ? LIMIT 1",
-    [FriendStatus.ACCEPTED, from, to]
+    "UPDATE friend SET status = ? WHERE `from` = ? AND `to` = ? AND `status` = ? LIMIT 1",
+    [FriendStatus.ACCEPTED, from, to, FriendStatus.PENDING]
   );
 
   return queryResult;
