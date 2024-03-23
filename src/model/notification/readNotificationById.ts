@@ -9,7 +9,7 @@ interface ReadNotificationById {
 
 export default async function readNotificationById({ id, userId }: ReadNotificationById) {
   const queryResult = await db.query<ResultSetHeader>(
-    "UPDATE notification SET `read` = 1 WHERE id = ? AND userId = ?",
+    "UPDATE notification SET `read` = 1 WHERE id = ? AND userId = ? LIMIT 1",
     [id, userId]
   );
 

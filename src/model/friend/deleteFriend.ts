@@ -8,7 +8,10 @@ interface DeleteFriendProps {
 }
 
 export default async function deleteFriend({ from, to }: DeleteFriendProps) {
-  const queryResult = await db.query<ResultSetHeader>("DELETE FROM friend WHERE `from` = ? AND `to` = ?", [from, to]);
+  const queryResult = await db.query<ResultSetHeader>("DELETE FROM friend WHERE `from` = ? AND `to` = ?  LIMIT 1", [
+    from,
+    to,
+  ]);
 
   return queryResult;
 }

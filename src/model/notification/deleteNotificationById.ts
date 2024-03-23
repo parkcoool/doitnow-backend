@@ -8,7 +8,7 @@ interface DeleteNotificationByIdProps {
 }
 
 export default async function deleteNotificationById({ id, userId }: DeleteNotificationByIdProps) {
-  const queryResult = await db.query<ResultSetHeader>("DELETE FROM notification WHERE id = ? AND userId = ?", [
+  const queryResult = await db.query<ResultSetHeader>("DELETE FROM notification WHERE id = ? AND userId = ? LIMIT 1", [
     id,
     userId,
   ]);
