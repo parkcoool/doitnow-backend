@@ -10,19 +10,22 @@ import getPublicProfile, { GetPublicProfileQuery } from "controller/user/getPubl
 import signup, { SignupBody } from "controller/user/signup";
 import updatePrivateProfile, { UpdatePrivateProfileBody } from "controller/user/updatePrivateProfile";
 import updatePublicProfile, { UpdatePublicProfileBody } from "controller/user/updatePublicProfile";
+import getUserIdentifier, { GetUserIdentifierQuery } from "controller/user/getUserIdentifier";
 
 const userRouter = express.Router();
 
 // 컨트롤러
-userRouter.post("", [requireEmailToken, validateRequest({ body: SignupBody }), signup]);
-userRouter.get("", validateRequest({ query: GetPublicProfileQuery }), getPublicProfile);
-userRouter.patch("/", [validateRequest({ body: UpdatePublicProfileBody }), requireUserToken, updatePublicProfile]);
+userRouter.post("", requireEmailToken, validateRequest({ body: SignupBody }), signup);
+userRouter.get("", requireUserToken, validateRequest({ query: GetPublicProfileQuery }), getPublicProfile);
+userRouter.patch("/", requireUserToken, validateRequest({ body: UpdatePublicProfileBody }), updatePublicProfile);
 userRouter.get("/private", requireUserToken, getPrivateProfile);
-userRouter.patch("/private", [
+userRouter.patch(
+  "/private",
   validateRequest({ body: UpdatePrivateProfileBody }),
   requireEmailToken,
-  updatePrivateProfile,
-]);
+  updatePrivateProfile
+);
+userRouter.get("/identifier", validateRequest({ query: GetUserIdentifierQuery }), getUserIdentifier);
 
 // 404 핸들 미들웨어
 userRouter.use(apiNotFoundErrorHandler);
