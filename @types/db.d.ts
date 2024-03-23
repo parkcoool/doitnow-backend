@@ -1,3 +1,4 @@
+import { FriendStatus } from "constant/friendStatus";
 import { NotificationType } from "constant/notificationType";
 
 declare module "db" {
@@ -33,5 +34,14 @@ declare module "db" {
     type: NotificationType;
     read: boolean;
     createdAt: string;
+  }
+
+  interface Friendrow {
+    id: number;
+    from: number;
+    to: number;
+    status: FriendStatus;
+    createdAt: string;
+    modifiedAt: string;
   }
 }

@@ -8,7 +8,7 @@ interface CreateFriendRequestProps {
 }
 
 export default async function createFriendRequest({ from, to }: CreateFriendRequestProps) {
-  const queryResult = await db.query<ResultSetHeader>("INSERT INTO friend_request SET ?", {
+  const queryResult = await db.query<ResultSetHeader>("INSERT INTO friend SET ?", {
     from,
     to,
   });
