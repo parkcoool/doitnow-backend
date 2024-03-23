@@ -36,7 +36,7 @@ declare module "db" {
     createdAt: string;
   }
 
-  interface Friendrow {
+  interface FriendRow {
     id: number;
     from: number;
     to: number;
