@@ -7,7 +7,7 @@ import apiNotFoundErrorHandler from "middleware/error/apiNotFoundErrorHandler";
 import getNotificationCount from "controller/notification/getNotificationCount";
 import getNotifications, { GetNotificationsQuery } from "controller/notification/getNotifications";
 import readNotification, { ReadNotificationBody } from "controller/notification/readNotification";
-import deleteNotification, { DeleteNotificationBody } from "controller/notification/deleteNotification";
+import deleteNotification, { DeleteNotificationQuery } from "controller/notification/deleteNotification";
 
 const notificationRouter = express.Router();
 
@@ -17,7 +17,7 @@ notificationRouter.get("/", [requireUserToken, validateRequest({ query: GetNotif
 notificationRouter.patch("/", [requireUserToken, validateRequest({ body: ReadNotificationBody }), readNotification]);
 notificationRouter.delete("/", [
   requireUserToken,
-  validateRequest({ body: DeleteNotificationBody }),
+  validateRequest({ query: DeleteNotificationQuery }),
   deleteNotification,
 ]);
 

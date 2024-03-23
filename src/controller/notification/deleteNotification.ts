@@ -6,19 +6,20 @@ import deleteAllNotifications from "model/notification/deleteAllNotifications";
 import ServerError from "error/ServerError";
 import InvalidValueError from "error/user/InvalidValueError";
 
-import userSchema from "schema/user";
-
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
 import type { ResultSetHeader, FieldPacket } from "mysql2";
 
-export const DeleteNotificationBody = z.object({
-  id: userSchema.id.optional(),
+export const DeleteNotificationQuery = z.object({
+  id: z
+    .string()
+    .refine((id) => parseInt(id) > 0, { path: ["id"], message: "id는 양의 정수여야 해요." })
+    .optional(),
 });
 
 interface ResBody extends APIResponse {}
 
-const deleteNotification: RequestHandler<{}, ResBody, z.infer<typeof DeleteNotificationBody>> = async function (
+const deleteNotification: RequestHandler<{}, ResBody, {}, z.infer<typeof DeleteNotificationQuery>> = async function (
   req,
   res,
   next
@@ -28,7 +29,7 @@ const deleteNotification: RequestHandler<{}, ResBody, z.infer<typeof DeleteNotif
     return next(new ServerError("사용자의 id를 불러올 수 없어요."));
   }
 
-  const { id } = req.body;
+  const id = req.query.id === undefined ? undefined : parseInt(req.query.id);
 
   let queryResult: [ResultSetHeader, FieldPacket[]];
 
