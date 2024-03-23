@@ -13,7 +13,11 @@ import requestFriend, { RequestFriendBody } from "controller/friend/requestFrien
 const friendrouter = express.Router();
 
 // 컨트롤러
-friendrouter.post("/", [requireUserToken, validateRequest({ body: AcceptFriendRequestBody }), acceptFriendRequest]);
+friendrouter.post("/accept", [
+  requireUserToken,
+  validateRequest({ body: AcceptFriendRequestBody }),
+  acceptFriendRequest,
+]);
 friendrouter.post("/cancel", [
   requireUserToken,
   validateRequest({ body: CancelFriendRequestBody }),
