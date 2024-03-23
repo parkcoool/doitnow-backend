@@ -18,7 +18,7 @@ export const DeleteNotificationBody = z.object({
 
 interface ResBody extends APIResponse {}
 
-const deleteNotification: RequestHandler<{}, ResBody, {}, z.infer<typeof DeleteNotificationBody>> = async function (
+const deleteNotification: RequestHandler<{}, ResBody, z.infer<typeof DeleteNotificationBody>> = async function (
   req,
   res,
   next
@@ -28,7 +28,7 @@ const deleteNotification: RequestHandler<{}, ResBody, {}, z.infer<typeof DeleteN
     return next(new ServerError("사용자의 id를 불러올 수 없어요."));
   }
 
-  const { id } = req.query;
+  const { id } = req.body;
 
   let queryResult: [ResultSetHeader, FieldPacket[]];
 

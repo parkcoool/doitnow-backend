@@ -18,7 +18,7 @@ export const ReadNotificationBody = z.object({
 
 interface ResBody extends APIResponse {}
 
-const getNotifications: RequestHandler<{}, ResBody, {}, z.infer<typeof ReadNotificationBody>> = async function (
+const getNotifications: RequestHandler<{}, ResBody, z.infer<typeof ReadNotificationBody>> = async function (
   req,
   res,
   next
@@ -28,7 +28,7 @@ const getNotifications: RequestHandler<{}, ResBody, {}, z.infer<typeof ReadNotif
     return next(new ServerError("사용자의 id를 불러올 수 없어요."));
   }
 
-  const { id } = req.query;
+  const { id } = req.body;
 
   let queryResult: [ResultSetHeader, FieldPacket[]];
 
