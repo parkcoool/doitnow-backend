@@ -22,7 +22,7 @@ export default async function getProfileByName({ viewerId, targetName }: GetProf
         WHEN f.status = 'accepted' THEN 'accepted'
         WHEN f.from = ? THEN 'received'
         ELSE f.status
-    END AS friendStatus
+      END AS friendStatus
     FROM
       user u
     LEFT JOIN

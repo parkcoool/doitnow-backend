@@ -22,6 +22,7 @@ interface ResBody extends APIResponse {
     read: boolean;
     createdAt: string;
   }[];
+  hasMore: boolean;
 }
 
 const getNotifications: RequestHandler<{}, ResBody, {}, z.infer<typeof GetNotificationsQuery>> = async function (
@@ -47,9 +48,12 @@ const getNotifications: RequestHandler<{}, ResBody, {}, z.infer<typeof GetNotifi
     type: notification.type,
     read: notification.read,
     createdAt: notification.createdAt,
+    hasMore: notification.hasMore,
   }));
 
-  return res.status(200).json({ notifications, message: "알림을 불러왔어요." });
+  return res
+    .status(200)
+    .json({ notifications, hasMore: notifications[0]?.hasMore ?? false, message: "알림을 불러왔어요." });
 };
 
 export default getNotifications;
