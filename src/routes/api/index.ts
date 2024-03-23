@@ -3,6 +3,7 @@ import express from "express";
 import authRouter from "./auth";
 import userRouter from "./user";
 import notificationRouter from "./notification";
+import friendrouter from "./friend";
 
 import errorHandler from "middleware/error/errorHandler";
 import userErrorHandler from "middleware/error/userErrorHandler";
@@ -17,6 +18,7 @@ const apiRouter = express.Router();
 apiRouter.use("/auth", trimBodyString, authRouter);
 apiRouter.use("/user", trimBodyString, userRouter);
 apiRouter.use("/notification", trimBodyString, notificationRouter);
+apiRouter.use("/friend", trimBodyString, friendrouter);
 
 // 404 핸들 미들웨어
 apiRouter.use(apiNotFoundErrorHandler);
