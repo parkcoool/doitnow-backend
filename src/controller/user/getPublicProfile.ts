@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import getUserByEmail from "model/user/getUserByEmail";
-import getUserById from "model/user/getUserById";
-import getUserByName from "model/user/getUserByName";
+import getProfileByEmail from "model/profile/getProfileByEmail";
+import getProfileById from "model/profile/getProfileById";
+import getProfileByName, { ProfileRow } from "model/profile/getProfileByName";
 
 import ServerError from "error/ServerError";
 import NotFoundError from "error/user/NotFoundError";
@@ -43,33 +43,38 @@ const getPublicProfile: RequestHandler<{}, ResBody, {}, z.infer<typeof GetPublic
   res,
   next
 ) {
+  const userId = req.userId;
+  if (userId === undefined) {
+    return next(new ServerError("사용자의 id를 불러올 수 없어요."));
+  }
+
   const { name, email, id } = req.query;
 
-  let queryResult: [(UserRow & RowDataPacket)[], FieldPacket[]];
+  let queryResult: [(ProfileRow & RowDataPacket)[], FieldPacket[]];
   if (name !== undefined) {
-    queryResult = await getUserByName({ name });
+    queryResult = await getProfileByName({ targetName: name, viewerId: userId });
   } else if (email !== undefined) {
-    queryResult = await getUserByEmail({ email });
+    queryResult = await getProfileByEmail({ targetEmail: email, viewerId: userId });
   } else if (id !== undefined) {
-    queryResult = await getUserById({ id: parseInt(id) });
+    queryResult = await getProfileById({ targetId: parseInt(id), viewerId: userId });
   } else {
     return next(new ServerError("예상하지 못한 에러가 발생했어요."));
   }
 
-  const users = queryResult[0];
-  if (users.length === 0) {
+  const profiles = queryResult[0];
+  if (profiles.length === 0) {
     return next(new NotFoundError("사용자를 찾을 수 없어요."));
   }
 
-  const user = users[0];
+  const profile = profiles[0];
   return res.status(200).json({
-    id: user.id,
-    username: user.username,
-    name: user.name,
-    bio: user.bio,
-    createdAt: user.createdAt,
-    profileImage: user.profileImage,
-    isFriend: false,
+    id: profile.id,
+    username: profile.username,
+    name: profile.name,
+    bio: profile.bio,
+    createdAt: profile.createdAt,
+    profileImage: profile.profileImage,
+    isFriend: profile.isFriend,
     message: "사용자 정보를 불러왔어요.",
   });
 };
