@@ -72,7 +72,7 @@ const requestFriend: RequestHandler<{}, ResBody, z.infer<typeof RequestFriendBod
     await createNotification({
       userId: to,
       text: `${user.username}님이 친구 요청을 보냈어요.`,
-      link: `/friend/requests/${friendRequestId}`,
+      link: `/friend/request/${friendRequestId}`,
       type: NotificationType.FRIEND_REQUEST,
     });
   }
