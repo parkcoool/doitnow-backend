@@ -11,6 +11,7 @@ import signup, { SignupBody } from "controller/user/signup";
 import updatePrivateProfile, { UpdatePrivateProfileBody } from "controller/user/updatePrivateProfile";
 import updatePublicProfile, { UpdatePublicProfileBody } from "controller/user/updatePublicProfile";
 import getUserIdentifier, { GetUserIdentifierQuery } from "controller/user/getUserIdentifier";
+import searchUser, { SearchUserQuery } from "controller/user/searchUser";
 
 const userRouter = express.Router();
 
@@ -26,6 +27,7 @@ userRouter.patch(
   updatePrivateProfile
 );
 userRouter.get("/identifier", validateRequest({ query: GetUserIdentifierQuery }), getUserIdentifier);
+userRouter.get("/search", requireUserToken, validateRequest({ query: SearchUserQuery }), searchUser);
 
 // 404 핸들 미들웨어
 userRouter.use(apiNotFoundErrorHandler);
