@@ -13,7 +13,7 @@ import type { APIResponse } from "api";
 import type { ResultSetHeader, FieldPacket } from "mysql2";
 
 export const ReadNotificationBody = z.object({
-  id: userSchema.id.optional(),
+  id: userSchema.id.array().optional(),
 });
 
 interface ResBody extends APIResponse {}

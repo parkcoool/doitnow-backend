@@ -13,7 +13,10 @@ import type { ResultSetHeader, FieldPacket } from "mysql2";
 export const DeleteNotificationQuery = z.object({
   id: z
     .string()
-    .refine((id) => parseInt(id) > 0, { path: ["id"], message: "id는 양의 정수여야 해요." })
+    .refine((id) => {
+      const parsedId = JSON.parse(id);
+      return Array.isArray(parsedId) && parsedId.every((id) => typeof id === "number" && id >= 0);
+    })
     .optional(),
 });
 
@@ -29,7 +32,7 @@ const deleteNotification: RequestHandler<{}, ResBody, {}, z.infer<typeof DeleteN
     return next(new ServerError("사용자의 id를 불러올 수 없어요."));
   }
 
-  const id = req.query.id === undefined ? undefined : parseInt(req.query.id);
+  const id = req.query.id === undefined ? undefined : (JSON.parse(req.query.id) as number[]);
 
   let queryResult: [ResultSetHeader, FieldPacket[]];
 
