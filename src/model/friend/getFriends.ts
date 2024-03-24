@@ -14,7 +14,7 @@ export interface GetFriendsProps {
 
 export default async function getFriends({ userId, offset }: GetFriendsProps) {
   const queryResult = await db.query<(FriendRow & RowDataPacket)[]>(
-    `SELECT
+    `SELECT 
       u.*,
       IF(COUNT(*) OVER () > 10, 1, 0) AS hasMore
     FROM

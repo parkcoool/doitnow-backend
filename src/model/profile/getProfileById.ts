@@ -10,7 +10,7 @@ export interface GetUserByIdProps {
 
 export default async function getProfileById({ viewerId, targetId }: GetUserByIdProps) {
   const queryResult = await db.query<(ProfileRow & RowDataPacket)[]>(
-    `SELECT
+    `SELECT 
       u.id,
       u.email,
       u.name,
