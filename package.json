@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "set NODE_PATH=./src && ts-node -r tsconfig-paths/register ./src/app.ts",
+    "build": "webpack --config webpack.config.js",
     "dev": "set NODE_PATH=./src && nodemon"
   },
   "author": "",
@@ -27,7 +28,11 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.11.25",
     "nodemon": "^3.1.0",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
+    "typescript": "^5.3.3",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
   }
 }
