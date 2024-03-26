@@ -12,8 +12,14 @@ const port = isProduction ? 8080 : 8081;
 
 const app = express();
 
+const corsOptions: cors.CorsOptions = isProduction
+  ? {
+      origin: "https://doitnow.kr",
+    }
+  : {};
+
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use("/api", apiRouter);
 
@@ -25,10 +31,10 @@ app.listen(port, () => {
 if (!isProduction) {
   const webhook = express();
 
-  app.use(express.json());
-  app.use(cors());
+  webhook.use(express.json());
+  webhook.use(cors());
 
-  app.use("/webhook", webhookRouter);
+  webhook.use("/webhook", webhookRouter);
 
   webhook.listen(8082, () => {
     console.log("Webhook is running on port 8082");

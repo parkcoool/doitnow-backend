@@ -34,6 +34,8 @@ githubRouter.post("/", (req, res) => {
       console.log(stdout);
       return res.status(200).send("ok");
     });
+  } else {
+    return res.status(200).send("ok");
   }
 });
 
