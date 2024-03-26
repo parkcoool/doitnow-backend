@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { exec } from "child_process";
 
 import apiRouter from "routes/api";
+import webhookRouter from "routes/webhook";
 
 dotenv.config();
 
@@ -25,24 +25,10 @@ app.listen(port, () => {
 if (!isProduction) {
   const webhook = express();
 
-  webhook.use(express.json());
+  app.use(express.json());
+  app.use(cors());
 
-  webhook.post("/webhook", (req, res) => {
-    const githubEvent = req.headers["x-github-event"];
-
-    if (githubEvent === "push") {
-      console.log("push event");
-      exec("git pull", (err, stdout, stderr) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).send(err.message);
-        }
-
-        console.log(stdout);
-        return res.status(200).send("ok");
-      });
-    }
-  });
+  app.use("/webhook", webhookRouter);
 
   webhook.listen(8082, () => {
     console.log("Webhook is running on port 8082");
