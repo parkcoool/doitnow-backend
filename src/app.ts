@@ -6,29 +6,32 @@ import apiRouter from "routes/api";
 import webhookRouter from "routes/webhook";
 
 dotenv.config();
-
 const isProduction = process.env.NODE_ENV === "production";
-const port = isProduction ? 8080 : 8081;
 
-const app = express();
+// api 등록
+{
+  const port = isProduction ? 8080 : 8081;
+  const app = express();
 
-const corsOptions: cors.CorsOptions = isProduction
-  ? {
-      origin: "https://doitnow.kr",
-    }
-  : {};
+  const corsOptions: cors.CorsOptions = isProduction
+    ? {
+        origin: "https://doitnow.kr",
+      }
+    : {};
 
-app.use(express.json());
-app.use(cors(corsOptions));
+  app.use(express.json());
+  app.use(cors(corsOptions));
 
-app.use("/api", apiRouter);
+  app.use("/api", apiRouter);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
 
 // webhook 등록
 if (!isProduction) {
+  const port = 8082;
   const webhook = express();
 
   webhook.use(express.json());
@@ -36,7 +39,7 @@ if (!isProduction) {
 
   webhook.use("/webhook", webhookRouter);
 
-  webhook.listen(8082, () => {
-    console.log("Webhook is running on port 8082");
+  webhook.listen(port, () => {
+    console.log(`Webhook is running on port ${port}`);
   });
 }
