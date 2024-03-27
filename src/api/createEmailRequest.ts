@@ -25,7 +25,6 @@ export default async function createEmailRequest({ email, code }: ReqBody) {
     {
       headers: {
         "Content-Type": "application/json",
-        "Content-Length": "0",
         "x-ncp-apigw-timestamp": Date.now().toString(),
         "x-ncp-iam-access-key": process.env.NAVER_CLOUD_ACCESS_KEY_ID!,
         "x-ncp-apigw-signature-v2": makeSignature(
