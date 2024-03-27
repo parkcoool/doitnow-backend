@@ -38,8 +38,10 @@ const sendEmail: RequestHandler<{}, ResBody, z.infer<typeof SendEmailBody>> = as
   const emailRequestRes = await createEmailRequest({ email, code });
   if (emailRequestRes.statusCode !== 201) return next(new ServerError("이메일을 발송하는 중에 문제가 발생했어요."));
 
-  // 테스트용 콘솔 출력
-  console.log(`${email}로 인증 코드 ${code} 발송됨`);
+  if (process.env.NODE_ENV !== "production") {
+    // 테스트용 콘솔 출력
+    console.log(`${email}로 인증 코드 ${code} 발송됨`);
+  }
 
   res.status(200).json({
     message: "인증 코드가 발송됐어요.",
