@@ -36,7 +36,7 @@ const sendEmail: RequestHandler<{}, ResBody, z.infer<typeof SendEmailBody>> = as
   }
 
   const emailRequestRes = await createEmailRequest({ email, code });
-  if (emailRequestRes.statusCode !== 201) return next(new ServerError("이메일을 발송하는 중에 문제가 발생했어요."));
+  if (emailRequestRes.status !== 201) return next(new ServerError("이메일을 발송하는 중에 문제가 발생했어요."));
 
   if (process.env.NODE_ENV !== "production") {
     // 테스트용 콘솔 출력
