@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import apiRouter from "routes/api";
-import webhookRouter from "routes/webhook";
+// import webhookRouter from "routes/webhook";
 
 dotenv.config();
 const isProduction = process.env.NODE_ENV === "production";
@@ -30,16 +30,17 @@ const isProduction = process.env.NODE_ENV === "production";
 }
 
 // webhook 등록
-if (!isProduction) {
-  const port = 8082;
-  const webhook = express();
-
-  webhook.use(express.json());
-  webhook.use(cors());
-
-  webhook.use("/webhook", webhookRouter);
-
-  webhook.listen(port, () => {
-    console.log(`Webhook is running on port ${port}`);
-  });
-}
+// if (!isProduction) {
+//   const port = 8082;
+//   const webhook = express();
+// 
+//   webhook.use(express.json());
+//   webhook.use(cors());
+// 
+//   webhook.use("/webhook", webhookRouter);
+// 
+//   webhook.listen(port, () => {
+//     console.log(`Webhook is running on port ${port}`);
+//   });
+// }
+// 
