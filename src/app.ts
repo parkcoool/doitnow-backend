@@ -1,4 +1,5 @@
 import express from "express";
+import axios from "axios";
 import cors from "cors";
 import dotenv from "dotenv";
 
@@ -7,6 +8,8 @@ import apiRouter from "routes/api";
 
 dotenv.config();
 const isProduction = process.env.NODE_ENV === "production";
+
+axios.defaults.validateStatus = () => true;
 
 // api 등록
 {
