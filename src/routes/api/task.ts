@@ -6,6 +6,7 @@ import apiNotFoundErrorHandler from "middleware/error/apiNotFoundErrorHandler";
 
 import getTaskCount, { GetTaskCountQuery } from "controller/task/getTaskCount";
 import getTasks, { GetTasksQuery } from "controller/task/getTasks";
+import createTask, { CreateTaskBody } from "controller/task/createTask";
 
 const taskRouter = express.Router();
 
@@ -21,6 +22,12 @@ taskRouter.get("/", [
   validateRequest({ query: GetTasksQuery }),
   getTasks,
 ]);
+taskRouter.post(
+  "/",
+  requireUserToken,
+  validateRequest({ body: CreateTaskBody }),
+  createTask
+);
 
 // 404 핸들 미들웨어
 taskRouter.use(apiNotFoundErrorHandler);
