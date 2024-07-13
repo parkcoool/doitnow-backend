@@ -56,12 +56,13 @@ declare module "db" {
     friendStatus: FriendStatus | null;
   }
 
-  interface TaskRow { 
+  interface TaskRow {
     id: number;
     creator: number;
     title: string;
     done: boolean;
     due: string | null;
+    startAt: string | null;
     createdAt: string;
     updatedAt: string;
   }

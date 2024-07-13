@@ -4,38 +4,67 @@ import validateRequest from "middleware/validate/validateRequest";
 import requireUserToken from "middleware/token/requireUserToken";
 import apiNotFoundErrorHandler from "middleware/error/apiNotFoundErrorHandler";
 
-import acceptFriendRequest, { AcceptFriendRequestBody } from "controller/friend/acceptFriendRequest";
-import cancelFriendRequest, { CancelFriendRequestBody } from "controller/friend/cancelFriendRequest";
-import deleteFriend, { DeleteFriendQuery } from "controller/friend/deleteFriend";
-import rejectFriendRequest, { RejectFriendRequestBody } from "controller/friend/rejectFriendRequest";
-import requestFriend, { RequestFriendBody } from "controller/friend/requestFriend";
+import acceptFriendRequest, {
+  AcceptFriendRequestBody,
+} from "controller/friend/acceptFriendRequest";
+import cancelFriendRequest, {
+  CancelFriendRequestBody,
+} from "controller/friend/cancelFriendRequest";
+import deleteFriend, {
+  DeleteFriendQuery,
+} from "controller/friend/deleteFriend";
+import rejectFriendRequest, {
+  RejectFriendRequestBody,
+} from "controller/friend/rejectFriendRequest";
+import requestFriend, {
+  RequestFriendBody,
+} from "controller/friend/requestFriend";
 import getFriends, { GetFriendsQuery } from "controller/friend/getFriends";
-import getFriendRequests, { GetFriendRequestsQuery } from "controller/friend/getFriendRequests";
+import getFriendRequests, {
+  GetFriendRequestsQuery,
+} from "controller/friend/getFriendRequests";
 
-const friendrouter = express.Router();
+const friendRouter = express.Router();
 
 // 컨트롤러
-friendrouter.post("/accept", [
+friendRouter.post("/accept", [
   requireUserToken,
   validateRequest({ body: AcceptFriendRequestBody }),
   acceptFriendRequest,
 ]);
-friendrouter.post("/cancel", [
+friendRouter.post("/cancel", [
   requireUserToken,
   validateRequest({ body: CancelFriendRequestBody }),
   cancelFriendRequest,
 ]);
-friendrouter.delete("/", requireUserToken, validateRequest({ query: DeleteFriendQuery }), deleteFriend);
-friendrouter.post("/reject", [
+friendRouter.delete(
+  "/",
+  requireUserToken,
+  validateRequest({ query: DeleteFriendQuery }),
+  deleteFriend
+);
+friendRouter.post("/reject", [
   requireUserToken,
   validateRequest({ body: RejectFriendRequestBody }),
   rejectFriendRequest,
 ]);
-friendrouter.post("/", [requireUserToken, validateRequest({ body: RequestFriendBody }), requestFriend]);
-friendrouter.get("/", [requireUserToken, validateRequest({ query: GetFriendsQuery }), getFriends]);
-friendrouter.get("/request", [requireUserToken, validateRequest({ query: GetFriendRequestsQuery }), getFriendRequests]);
+friendRouter.post("/", [
+  requireUserToken,
+  validateRequest({ body: RequestFriendBody }),
+  requestFriend,
+]);
+friendRouter.get("/", [
+  requireUserToken,
+  validateRequest({ query: GetFriendsQuery }),
+  getFriends,
+]);
+friendRouter.get("/request", [
+  requireUserToken,
+  validateRequest({ query: GetFriendRequestsQuery }),
+  getFriendRequests,
+]);
 
 // 404 핸들 미들웨어
-friendrouter.use(apiNotFoundErrorHandler);
+friendRouter.use(apiNotFoundErrorHandler);
 
-export default friendrouter;
+export default friendRouter;

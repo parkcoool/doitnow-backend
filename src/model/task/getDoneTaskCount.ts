@@ -15,9 +15,13 @@ export default async function getDoneTaskCount({
           COUNT(*) AS count
       FROM
           task
-      WHERE 
-          ?`,
-    [{ userId, done: 1 }]
+      WHERE
+          userId = ? AND
+          done = 1 AND
+          (startAt IS NULL OR startAt <= NOW()) AND
+          (due IS NULL OR NOW() <= due)
+          `,
+    [userId]
   );
 
   return queryResult;
