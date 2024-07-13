@@ -16,7 +16,7 @@ export default async function getTotalTaskCount({
       FROM
           task
       WHERE
-          userId = ? AND
+          creator = ? AND
           (startAt IS NULL OR startAt <= NOW()) AND
           (due IS NULL OR NOW() <= due)
           `,

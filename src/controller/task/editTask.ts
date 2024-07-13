@@ -34,6 +34,7 @@ const editTask: RequestHandler<
 
   const queryResult = await patchTask({
     id,
+    userId,
     patch: {
       title,
       startAt,
