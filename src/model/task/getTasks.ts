@@ -9,7 +9,7 @@ interface TaskRow extends RawTaskRow {
   hasMore: boolean;
 }
 
-export interface getTasksProps {
+interface GetTasksProps {
   userId: number;
   offset?: number;
   orderBy?: OrderBy;
@@ -21,7 +21,7 @@ export default async function getTasks({
   offset,
   orderBy,
   onlyUndone,
-}: getTasksProps) {
+}: GetTasksProps) {
   let queryResult: [(TaskRow & RowDataPacket)[], FieldPacket[]];
 
   const filter = {
