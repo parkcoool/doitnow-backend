@@ -37,7 +37,7 @@ const getTaskCount: RequestHandler<{}, ResBody> = async function (
     count = queryResult[0][0].count;
   }
 
-  return res.status(200).json({ count, message: "알림 개수를 불러왔어요." });
+  return res.status(200).json({ count, message: "할 일 개수를 불러왔어요." });
 };
 
 export default getTaskCount;

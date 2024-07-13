@@ -62,7 +62,7 @@ const getNotifications: RequestHandler<
 
   return res
     .status(200)
-    .json({ tasks, hasMore, message: "알림을 불러왔어요." });
+    .json({ tasks, hasMore, message: "할 일을 불러왔어요." });
 };
 
 export default getNotifications;
