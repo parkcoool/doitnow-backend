@@ -12,7 +12,7 @@ import type { APIResponse } from "api";
 export const GetTasksQuery = z.object({
   offset: taskSchema.offset.optional(),
   orderBy: taskSchema.orderBy.optional(),
-  onlyUndone: z.boolean().optional(),
+  onlyUndone: taskSchema.done.optional(),
 });
 
 interface ResBody extends APIResponse {
@@ -46,7 +46,7 @@ const getNotifications: RequestHandler<
     userId,
     offset,
     orderBy,
-    onlyUndone,
+    onlyUndone: onlyUndone ? JSON.parse(onlyUndone) : undefined,
   });
   const hasMore = queryResult[0][0]?.hasMore ?? false;
   const tasks = queryResult[0].map((task) => ({

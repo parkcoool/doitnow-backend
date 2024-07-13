@@ -5,11 +5,13 @@ import getTotalTaskCount from "model/task/getTotalTaskCount";
 
 import ServerError from "error/ServerError";
 
+import taskSchema from "schema/task";
+
 import type { RequestHandler } from "express";
 import type { APIResponse } from "api";
 
 export const GetTaskCountQuery = z.object({
-  done: z.boolean(),
+  done: taskSchema.done.optional(),
 });
 
 interface ResBody extends APIResponse {
@@ -28,11 +30,10 @@ const getTaskCount: RequestHandler<{}, ResBody> = async function (
 
   let count: number;
 
-  if (req.query.done) {
+  if (req.query.done === "true") {
     const queryResult = await getDoneTaskCount({ userId });
     count = queryResult[0][0].count;
-  }
-  else {
+  } else {
     const queryResult = await getTotalTaskCount({ userId });
     count = queryResult[0][0].count;
   }

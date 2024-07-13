@@ -15,7 +15,7 @@ export const EditTaskBody = z.object({
   title: taskSchema.title.optional(),
   startAt: taskSchema.date.optional(),
   due: taskSchema.date.optional(),
-  done: z.boolean().optional(),
+  done: taskSchema.done.optional(),
 });
 
 interface ResBody extends APIResponse {}
@@ -38,7 +38,7 @@ const editTask: RequestHandler<
       title,
       startAt,
       due,
-      done,
+      done: done ? JSON.parse(done) : undefined,
     },
   });
 
