@@ -55,4 +55,14 @@ declare module "db" {
     profileImage: string | null;
     friendStatus: FriendStatus | null;
   }
+
+  interface TaskRow { 
+    id: number;
+    creator: number;
+    title: string;
+    done: boolean;
+    due: string | null;
+    createdAt: string;
+    updatedAt: string;
+  }
 }
